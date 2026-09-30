@@ -6,7 +6,7 @@ const { error } = require("node:console");
 
 dotenv.config();
 const app = express();
-const PORT = process.env.EXPRESS_PORT;
+const PORT = process.env.PORT || 8000;
 
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
