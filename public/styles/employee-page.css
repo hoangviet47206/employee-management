@@ -1,0 +1,486 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Montserrat", sans-serif;
+}
+
+body {
+  background-color: #f4f6f9;
+  color: #333;
+  padding: 20px;
+}
+
+
+/* ========================
+   MAIN CONTAINER
+======================== */
+
+.container {
+  display: flex;
+  gap: 20px;
+  max-width: 1600px;
+  margin: 0 auto;
+  align-items: flex-start;
+}
+
+
+/* ========================
+   EMPLOYEE CONTAINER
+======================== */
+
+.employee-container {
+  flex: 3;
+  min-width: 0;
+
+  background: #fff;
+  padding: 24px;
+
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+
+  overflow-x: auto;
+}
+
+.title {
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: #2c3e50;
+}
+
+
+/* ========================
+   FILTER
+======================== */
+
+.filter-form {
+  margin-bottom: 20px;
+}
+
+.filter-group {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.filter-group input {
+  padding: 8px 12px;
+
+  border: 1px solid #ccc;
+  border-radius: 4px;
+
+  outline: none;
+  font-size: 14px;
+}
+
+.filter-group input:focus {
+  border-color: #3498db;
+}
+
+.filter-group button,
+.clear-btn {
+  padding: 8px 16px;
+
+  border: none;
+  border-radius: 4px;
+
+  cursor: pointer;
+
+  font-weight: 600;
+  font-size: 14px;
+
+  text-decoration: none;
+}
+
+.filter-group button {
+  background-color: #3498db;
+  color: white;
+}
+
+.filter-group button:hover {
+  background-color: #2980b9;
+}
+
+.clear-btn {
+  background-color: #95a5a6;
+  color: white;
+}
+
+.clear-btn:hover {
+  background-color: #7f8c8d;
+}
+
+
+/* ========================
+   EMPLOYEE TABLE
+======================== */
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+table th,
+table td {
+  padding: 10px 12px;
+
+  text-align: left;
+  vertical-align: middle;
+
+  border-bottom: 1px solid #e0e0e0;
+
+  font-size: 13px;
+}
+
+table th {
+  background-color: #f8f9fa;
+  color: #555;
+
+  /* Không cho tiêu đề như Reports To bị tách dòng */
+  white-space: nowrap;
+}
+
+table td {
+  /* Giữ dữ liệu ngắn trên một dòng */
+  white-space: nowrap;
+}
+
+table tbody tr {
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+table tbody tr:hover {
+  background-color: #f1f7fd;
+}
+
+
+/* Job Title có thể dài nên cho phép xuống dòng */
+
+table th:last-child,
+table td:last-child {
+  min-width: 135px;
+}
+
+table td:last-child {
+  white-space: normal;
+  line-height: 1.4;
+}
+
+
+/* Email cần thêm không gian */
+
+table th:nth-child(5),
+table td:nth-child(5) {
+  min-width: 180px;
+}
+
+
+/* First Name và Last Name */
+
+table th:nth-child(2),
+table td:nth-child(2),
+table th:nth-child(3),
+table td:nth-child(3) {
+  min-width: 100px;
+}
+
+
+/* Reports To */
+
+table th:nth-child(7),
+table td:nth-child(7) {
+  min-width: 90px;
+  white-space: nowrap;
+}
+
+
+.no-data {
+  text-align: center;
+  color: #888;
+  padding: 20px;
+}
+
+
+/* ========================
+   PAGINATION
+======================== */
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  gap: 8px;
+  margin-top: 24px;
+}
+
+.pagination a {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  min-width: 38px;
+  height: 38px;
+
+  padding: 0 10px;
+
+  border: 1px solid #ddd;
+  border-radius: 5px;
+
+  background-color: #fff;
+  color: #3498db;
+
+  text-decoration: none;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  transition: 0.2s;
+}
+
+.pagination a:hover {
+  background-color: #f1f7fd;
+  border-color: #3498db;
+}
+
+.pagination a.active {
+  background-color: #3498db;
+  color: #fff;
+  border-color: #3498db;
+}
+
+
+/* ========================
+   ADD EMPLOYEE
+======================== */
+
+.add-container {
+  flex: 1;
+
+  width: 320px;
+  min-width: 300px;
+  max-width: 340px;
+
+  background: #fff;
+  padding: 24px;
+
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+
+  height: fit-content;
+}
+
+.add-container h2 {
+  font-size: 20px;
+  margin-bottom: 20px;
+  color: #2c3e50;
+}
+
+
+/* ========================
+   FORM
+======================== */
+
+.form-group {
+  margin-bottom: 14px;
+}
+
+.form-group label {
+  display: block;
+
+  margin-bottom: 6px;
+
+  font-size: 13px;
+  font-weight: 500;
+
+  color: #555;
+}
+
+.form-group input {
+  width: 100%;
+
+  padding: 8px 12px;
+
+  border: 1px solid #ccc;
+  border-radius: 4px;
+
+  font-size: 14px;
+
+  outline: none;
+}
+
+.form-group input:focus {
+  border-color: #3498db;
+}
+
+
+/* ========================
+   ADD BUTTON
+======================== */
+
+.submit-btn {
+  width: 100%;
+
+  padding: 10px;
+
+  background-color: #2ecc71;
+  color: white;
+
+  border: none;
+  border-radius: 4px;
+
+  font-size: 15px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  margin-top: 10px;
+}
+
+.submit-btn:hover {
+  background-color: #27ae60;
+}
+
+
+/* ========================
+   EDIT MODAL
+======================== */
+
+.edit-modal {
+  display: none;
+
+  position: fixed;
+
+  top: 0;
+  left: 0;
+
+  width: 100%;
+  height: 100%;
+
+  background-color: rgba(0, 0, 0, 0.5);
+
+  justify-content: center;
+  align-items: center;
+
+  z-index: 1000;
+}
+
+.edit-modal.open {
+  display: flex;
+}
+
+.modal-container {
+  background: #fff;
+
+  width: 500px;
+  max-width: 90%;
+
+  border-radius: 8px;
+
+  padding: 24px;
+
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  margin-bottom: 20px;
+}
+
+.modal-header h2 {
+  font-size: 20px;
+  color: #2c3e50;
+}
+
+.close-btn {
+  font-size: 24px;
+
+  cursor: pointer;
+
+  color: #999;
+}
+
+.close-btn:hover {
+  color: #333;
+}
+
+.modal-body {
+  max-height: 400px;
+
+  overflow-y: auto;
+
+  padding-right: 8px;
+}
+
+
+/* ========================
+   MODAL BUTTONS
+======================== */
+
+.button-group {
+  display: flex;
+  justify-content: flex-end;
+
+  gap: 12px;
+
+  margin-top: 20px;
+}
+
+.button-group button {
+  padding: 8px 18px;
+
+  border: none;
+  border-radius: 4px;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.button-group button[type="submit"] {
+  background-color: #3498db;
+  color: white;
+}
+
+.button-group button[type="submit"]:hover {
+  background-color: #2980b9;
+}
+
+.button-group .delete-button {
+  background-color: #e74c3c;
+  color: white;
+}
+
+.button-group .delete-button:hover {
+  background-color: #c0392b;
+}
+
+
+/* ========================
+   RESPONSIVE
+======================== */
+
+@media (max-width: 1100px) {
+
+  .container {
+    flex-direction: column;
+  }
+
+  .employee-container {
+    width: 100%;
+    overflow-x: auto;
+  }
+
+  .add-container {
+    width: 100%;
+    min-width: 0;
+    max-width: none;
+  }
+}
