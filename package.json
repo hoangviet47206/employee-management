@@ -1,24 +1,41 @@
 {
   "name": "employee-management",
   "version": "1.0.0",
-  "description": "",
+  "description": "Employee management web application built with Node.js, Express, EJS and MySQL.",
   "main": "app.js",
+
   "scripts": {
     "start": "node app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+
+  "engines": {
+    "node": ">=20"
+  },
+
   "repository": {
     "type": "git",
     "url": "git+https://github.com/hoangviet47206/employee-management.git"
   },
-  "keywords": [],
+
+  "keywords": [
+    "nodejs",
+    "express",
+    "mysql",
+    "employee-management"
+  ],
+
   "author": "",
   "license": "ISC",
+
   "type": "commonjs",
+
   "bugs": {
     "url": "https://github.com/hoangviet47206/employee-management/issues"
   },
+
   "homepage": "https://github.com/hoangviet47206/employee-management#readme",
+
   "dependencies": {
     "bcrypt": "^6.0.0",
     "dotenv": "^18.0.4",
