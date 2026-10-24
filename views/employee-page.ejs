@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="en">
 
 <head>
@@ -23,7 +24,7 @@
   >
 
   <link
-    href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap"
     rel="stylesheet"
   >
 
@@ -37,52 +38,102 @@
 <body>
 
   <!-- ========================
-       USER BAR
+       TOPBAR
   ========================= -->
 
-  <div class="logout-form">
+  <header class="topbar">
 
-    <div class="user-info">
-      <strong>
-        <%= currentUser.username %>
-      </strong>
+    <div class="topbar-left">
 
-      <span class="role-badge">
-        <%= currentUser.role %>
-      </span>
+      <div class="brand-mark">
+        EM
+      </div>
+
+      <div>
+        <p class="topbar-eyebrow">
+          Employee Management
+        </p>
+
+        <h2 class="topbar-title">
+          Dashboard
+        </h2>
+      </div>
+
     </div>
 
-    <form
-      action="/logout"
-      method="POST"
-    >
-      <button
-        class="logout-btn"
-        type="submit"
-      >
-        Logout
-      </button>
-    </form>
 
-  </div>
+    <div class="topbar-right">
+
+      <div class="user-card">
+
+        <div class="avatar">
+          <%= currentUser.username.charAt(0).toUpperCase() %>
+        </div>
+
+        <div class="user-meta">
+
+          <strong>
+            <%= currentUser.username %>
+          </strong>
+
+          <span class="role-badge">
+            <%= currentUser.role %>
+          </span>
+
+        </div>
+
+      </div>
+
+
+      <form
+        action="/logout"
+        method="POST"
+      >
+
+        <button
+          class="logout-btn"
+          type="submit"
+        >
+          Logout
+        </button>
+
+      </form>
+
+    </div>
+
+  </header>
 
 
   <!-- ========================
        MAIN CONTAINER
   ========================= -->
 
-  <div class="container">
+  <main class="container">
 
 
     <!-- ========================
          EMPLOYEE LIST
     ========================= -->
 
-    <div class="employee-container">
+    <section class="employee-container">
 
-      <h1 class="title">
-        Employee List (<%= totalEmployees %>)
-      </h1>
+      <div class="section-heading">
+
+        <div>
+          <p class="section-eyebrow">
+            Team overview
+          </p>
+
+          <h1 class="title">
+            Employee List
+          </h1>
+        </div>
+
+        <span class="employee-count">
+          <%= totalEmployees %> employees
+        </span>
+
+      </div>
 
 
       <!-- ========================
@@ -100,25 +151,28 @@
           <input
             type="text"
             name="firstName"
-            placeholder="Filter by first name"
+            placeholder="First name"
             value="<%= filters.firstName || '' %>"
           >
 
           <input
             type="text"
             name="lastName"
-            placeholder="Filter by last name"
+            placeholder="Last name"
             value="<%= filters.lastName || '' %>"
           >
 
           <input
             type="text"
             name="jobTitle"
-            placeholder="Filter by job title"
+            placeholder="Job title"
             value="<%= filters.jobTitle || '' %>"
           >
 
-          <button type="submit">
+          <button
+            type="submit"
+            class="filter-btn"
+          >
             Filter
           </button>
 
@@ -135,97 +189,133 @@
 
 
       <!-- ========================
-           EMPLOYEE TABLE
+           TABLE
       ========================= -->
 
-      <table>
+      <div class="table-wrapper">
 
-        <thead>
+        <table>
 
-          <tr>
-            <th>No.</th>
-            <th>First Name</th>
-            <th>Last Name</th>
-            <th>Extension</th>
-            <th>Email</th>
-            <th>Office Code</th>
-            <th>Reports To</th>
-            <th>Job Title</th>
-          </tr>
+          <thead>
 
-        </thead>
+            <tr>
+              <th>No.</th>
+              <th>First Name</th>
+              <th>Last Name</th>
+              <th>Extension</th>
+              <th>Email</th>
+              <th>Office</th>
+              <th>Reports To</th>
+              <th>Job Title</th>
+            </tr>
+
+          </thead>
 
 
-        <tbody>
+          <tbody>
 
-          <% if (employees && employees.length > 0) { %>
+            <% if (
+              employees &&
+              employees.length > 0
+            ) { %>
 
-            <% employees.forEach((employee) => { %>
 
-              <tr
-  data-employee='<%= JSON.stringify(employee) %>'
-  <% if (
-    currentUser.role === "manager" ||
-    currentUser.role === "admin"
-  ) { %>
-    title="Click to edit employee"
-  <% } %>
->
+              <% employees.forEach(
+                (employee) => {
+              %>
 
-                <td>
-                  <%= employee.employeeNumber %>
-                </td>
+                <tr
+                  data-employee='<%= JSON.stringify(employee) %>'
 
-                <td>
-                  <%= employee.firstName %>
-                </td>
+                  <% if (
+                    currentUser.role === "manager" ||
+                    currentUser.role === "admin"
+                  ) { %>
 
-                <td>
-                  <%= employee.lastName %>
-                </td>
+                    title="Click to edit employee"
 
-                <td>
-                  <%= employee.extension %>
-                </td>
+                  <% } %>
+                >
 
-                <td>
-                  <%= employee.email %>
-                </td>
+                  <td>
+                    <span class="employee-number">
+                      #<%= employee.employeeNumber %>
+                    </span>
+                  </td>
 
-                <td>
-                  <%= employee.officeCode %>
-                </td>
+                  <td>
+                    <strong>
+                      <%= employee.firstName %>
+                    </strong>
+                  </td>
 
-                <td>
-                  <%= employee.reportsTo || "" %>
-                </td>
+                  <td>
+                    <%= employee.lastName %>
+                  </td>
 
-                <td>
-                  <%= employee.jobTitle %>
+                  <td>
+                    <%= employee.extension %>
+                  </td>
+
+                  <td class="employee-email">
+                    <%= employee.email %>
+                  </td>
+
+                  <td>
+                    <span class="office-badge">
+                      <%= employee.officeCode %>
+                    </span>
+                  </td>
+
+                  <td>
+                    <%= employee.reportsTo || "-" %>
+                  </td>
+
+                  <td>
+                    <%= employee.jobTitle %>
+                  </td>
+
+                </tr>
+
+              <% }) %>
+
+
+            <% } else { %>
+
+              <tr>
+
+                <td
+                  colspan="8"
+                  class="no-data"
+                >
+
+                  <div class="empty-state">
+
+                    <div class="empty-icon">
+                      ?
+                    </div>
+
+                    <strong>
+                      No employees found
+                    </strong>
+
+                    <span>
+                      Try changing your filters.
+                    </span>
+
+                  </div>
+
                 </td>
 
               </tr>
 
-            <% }) %>
+            <% } %>
 
-          <% } else { %>
+          </tbody>
 
-            <tr>
+        </table>
 
-              <td
-                colspan="8"
-                class="no-data"
-              >
-                No employees found
-              </td>
-
-            </tr>
-
-          <% } %>
-
-        </tbody>
-
-      </table>
+      </div>
 
 
       <!-- ========================
@@ -255,12 +345,11 @@
 
       <% } %>
 
-    </div>
+    </section>
 
 
     <!-- ========================
-         ADD NEW EMPLOYEE
-         MANAGER / ADMIN
+         ADD EMPLOYEE
     ========================= -->
 
     <% if (
@@ -268,11 +357,26 @@
       currentUser.role === "admin"
     ) { %>
 
-      <div class="add-container">
+      <aside class="add-container">
 
-        <h2>
-          Add New Employee
-        </h2>
+        <div class="add-header">
+
+          <div class="add-icon">
+            +
+          </div>
+
+          <div>
+            <p class="section-eyebrow">
+              Team member
+            </p>
+
+            <h2>
+              Add Employee
+            </h2>
+          </div>
+
+        </div>
+
 
         <form
           action="/add"
@@ -290,6 +394,7 @@
               type="number"
               id="employeeNumber"
               name="employeeNumber"
+              placeholder="e.g. 1705"
               required
             >
 
@@ -306,6 +411,7 @@
               type="text"
               id="firstName"
               name="firstName"
+              placeholder="First name"
               required
             >
 
@@ -322,6 +428,7 @@
               type="text"
               id="lastName"
               name="lastName"
+              placeholder="Last name"
               required
             >
 
@@ -338,6 +445,7 @@
               type="text"
               id="extension"
               name="extension"
+              placeholder="e.g. x101"
               required
             >
 
@@ -354,6 +462,7 @@
               type="email"
               id="email"
               name="email"
+              placeholder="employee@example.com"
               required
             >
 
@@ -370,6 +479,7 @@
               type="text"
               id="officeCode"
               name="officeCode"
+              placeholder="Office code"
               required
             >
 
@@ -386,6 +496,7 @@
               type="number"
               id="reportsTo"
               name="reportsTo"
+              placeholder="Manager ID"
             >
 
           </div>
@@ -401,6 +512,7 @@
               type="text"
               id="jobTitle"
               name="jobTitle"
+              placeholder="Job title"
               required
             >
 
@@ -411,19 +523,19 @@
             type="submit"
             class="submit-btn"
           >
+            <span>+</span>
             Add Employee
           </button>
 
         </form>
 
-      </div>
+      </aside>
 
     <% } %>
 
 
     <!-- ========================
-         EDIT EMPLOYEE MODAL
-         MANAGER / ADMIN
+         EDIT MODAL
     ========================= -->
 
     <% if (
@@ -437,13 +549,26 @@
 
           <div class="modal-header">
 
-            <h2>
-              Employee Details
-            </h2>
+            <div>
 
-            <span class="close-btn">
+              <p class="section-eyebrow">
+                Employee profile
+              </p>
+
+              <h2>
+                Employee Details
+              </h2>
+
+            </div>
+
+
+            <button
+              type="button"
+              class="close-btn"
+              aria-label="Close"
+            >
               &times;
-            </span>
+            </button>
 
           </div>
 
@@ -588,13 +713,6 @@
 
             <div class="button-group">
 
-              <button type="submit">
-                Save
-              </button>
-
-
-              <!-- ADMIN ONLY -->
-
               <% if (
                 currentUser.role === "admin"
               ) { %>
@@ -608,6 +726,14 @@
 
               <% } %>
 
+
+              <button
+                type="submit"
+                class="save-button"
+              >
+                Save Changes
+              </button>
+
             </div>
 
           </form>
@@ -617,9 +743,64 @@
       </div>
 
     <% } %>
+<!-- ========================
+     DELETE CONFIRM MODAL
+========================= -->
 
+<% if (currentUser.role === "admin") { %>
+
+  <div
+    class="delete-confirm-modal"
+    id="delete-confirm-modal"
+  >
+
+    <div class="delete-confirm-card">
+
+      <div class="delete-warning-icon">
+        !
+      </div>
+
+      <h2>
+        Delete Employee?
+      </h2>
+
+      <p>
+        You are about to delete
+        <strong id="delete-employee-label">
+          this employee
+        </strong>.
+      </p>
+
+      <span class="delete-warning-text">
+        This action cannot be undone.
+      </span>
+
+      <div class="delete-confirm-actions">
+
+        <button
+          type="button"
+          class="cancel-delete-btn"
+          id="cancel-delete-btn"
+        >
+          Cancel
+        </button>
+
+        <button
+          type="button"
+          class="confirm-delete-btn"
+          id="confirm-delete-btn"
+        >
+          Delete Employee
+        </button>
+
+      </div>
+
+    </div>
 
   </div>
+
+<% } %>
+  </main>
 
 
   <!-- ========================
@@ -634,7 +815,6 @@
     <script src="/scripts/employee-page.js"></script>
 
   <% } %>
-
 
 </body>
 

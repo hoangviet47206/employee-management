@@ -15,16 +15,16 @@ const {
   requireRole,
 } = require("../middleware/roleMiddleware");
 
+
 const employeeRouter = Router();
 
 
 // ========================
-// VIEW / FILTER EMPLOYEES
-// employee / manager / admin
+// EMPLOYEE PAGE
 // ========================
 
 employeeRouter.get(
-  "/",
+  "/employees",
   requireAuth,
   renderEmployee
 );
@@ -32,41 +32,50 @@ employeeRouter.get(
 
 // ========================
 // ADD EMPLOYEE
-// manager / admin
+// MANAGER / ADMIN
 // ========================
 
 employeeRouter.post(
-  "/add",
+  "/employees/add",
   requireAuth,
-  requireRole("manager", "admin"),
+  requireRole(
+    "manager",
+    "admin"
+  ),
   addEmployee
 );
 
 
 // ========================
 // UPDATE EMPLOYEE
-// manager / admin
+// MANAGER / ADMIN
 // ========================
 
 employeeRouter.post(
-  "/update",
+  "/employees/update",
   requireAuth,
-  requireRole("manager", "admin"),
+  requireRole(
+    "manager",
+    "admin"
+  ),
   updateEmployee
 );
 
 
 // ========================
 // DELETE EMPLOYEE
-// admin only
+// ADMIN ONLY
 // ========================
 
 employeeRouter.post(
-  "/delete",
+  "/employees/delete",
   requireAuth,
-  requireRole("admin"),
+  requireRole(
+    "admin"
+  ),
   deleteEmployee
 );
 
 
-module.exports = employeeRouter;
+module.exports =
+  employeeRouter;

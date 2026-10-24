@@ -27,8 +27,17 @@ async function registerUser(req, res) {
     ) {
       return res
         .status(400)
-        .send(
-          "Please fill in all fields."
+        .render(
+          "register",
+          {
+            error:
+              "Please fill in all fields.",
+
+            formData: {
+              username,
+              email,
+            },
+          }
         );
     }
 
@@ -38,11 +47,21 @@ async function registerUser(req, res) {
         username
       );
 
+
     if (existingUsername) {
       return res
         .status(400)
-        .send(
-          "Username already exists."
+        .render(
+          "register",
+          {
+            error:
+              "Username already exists.",
+
+            formData: {
+              username,
+              email,
+            },
+          }
         );
     }
 
@@ -52,16 +71,27 @@ async function registerUser(req, res) {
         email
       );
 
+
     if (existingEmail) {
       return res
         .status(400)
-        .send(
-          "Email already exists."
+        .render(
+          "register",
+          {
+            error:
+              "Email already exists.",
+
+            formData: {
+              username,
+              email,
+            },
+          }
         );
     }
 
 
     const saltRounds = 10;
+
 
     const passwordHash =
       await bcrypt.hash(
@@ -78,18 +108,33 @@ async function registerUser(req, res) {
 
 
     return res.redirect(
-      "/login"
+      "/login?registered=1"
     );
+
   } catch (error) {
+
     console.error(
       "Register error:",
       error
     );
 
+
     return res
       .status(500)
-      .send(
-        "Internal server error."
+      .render(
+        "register",
+        {
+          error:
+            "Something went wrong. Please try again.",
+
+          formData: {
+            username:
+              req.body.username || "",
+
+            email:
+              req.body.email || "",
+          },
+        }
       );
   }
 }
@@ -113,8 +158,18 @@ async function loginUser(req, res) {
     ) {
       return res
         .status(400)
-        .send(
-          "Please enter username and password."
+        .render(
+          "login",
+          {
+            error:
+              "Please enter username and password.",
+
+            username:
+              username || "",
+
+            success:
+              null,
+          }
         );
     }
 
@@ -128,8 +183,17 @@ async function loginUser(req, res) {
     if (!user) {
       return res
         .status(401)
-        .send(
-          "Invalid username or password."
+        .render(
+          "login",
+          {
+            error:
+              "Invalid username or password.",
+
+            username,
+
+            success:
+              null,
+          }
         );
     }
 
@@ -144,52 +208,92 @@ async function loginUser(req, res) {
     if (!passwordMatch) {
       return res
         .status(401)
-        .send(
-          "Invalid username or password."
+        .render(
+          "login",
+          {
+            error:
+              "Invalid username or password.",
+
+            username,
+
+            success:
+              null,
+          }
         );
     }
 
 
-    // Tạo session mới sau khi login thành công
     req.session.regenerate(
       (error) => {
+
         if (error) {
+
           console.error(
             "Session regenerate error:",
             error
           );
 
+
           return res
             .status(500)
-            .send(
-              "Internal server error."
+            .render(
+              "login",
+              {
+                error:
+                  "Unable to create your session. Please try again.",
+
+                username,
+
+                success:
+                  null,
+              }
             );
         }
 
 
         req.session.user = {
-          id: user.id,
-          username: user.username,
-          role: user.role,
+          id:
+            user.id,
+
+          username:
+            user.username,
+
+          role:
+            user.role,
+
           employee_id:
             user.employee_id,
         };
 
 
-        return res.redirect("/");
+        return res.redirect(
+          "/employees"
+        );
       }
     );
 
   } catch (error) {
+
     console.error(
       "Login error:",
       error
     );
 
+
     return res
       .status(500)
-      .send(
-        "Internal server error."
+      .render(
+        "login",
+        {
+          error:
+            "Something went wrong. Please try again.",
+
+          username:
+            req.body.username || "",
+
+          success:
+            null,
+        }
       );
   }
 }
@@ -200,18 +304,31 @@ async function loginUser(req, res) {
 // ========================
 
 function logoutUser(req, res) {
+
   req.session.destroy(
     (error) => {
+
       if (error) {
+
         console.error(
           "Logout error:",
           error
         );
 
+
         return res
           .status(500)
-          .send(
-            "Unable to log out."
+          .render(
+            "error-page",
+            {
+              statusCode: 500,
+
+              title:
+                "Logout Failed",
+
+              message:
+                "Unable to log out. Please try again.",
+            }
           );
       }
 
@@ -222,7 +339,7 @@ function logoutUser(req, res) {
 
 
       return res.redirect(
-        "/login"
+        "/"
       );
     }
   );
