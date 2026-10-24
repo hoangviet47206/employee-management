@@ -32,6 +32,12 @@ app.use(
   })
 );
 
+// Cho EJS biết user hiện tại
+app.use((req, res, next) => {
+  res.locals.currentUser = req.session.user || null;
+  next();
+});
+
 app.use("/", authRouter);
 app.use("/", employeeRouter);
 

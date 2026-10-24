@@ -11,7 +11,17 @@ const {
   requireAuth,
 } = require("../middleware/authMiddleware");
 
+const {
+  requireRole,
+} = require("../middleware/roleMiddleware");
+
 const employeeRouter = Router();
+
+
+// ========================
+// VIEW / FILTER EMPLOYEES
+// employee / manager / admin
+// ========================
 
 employeeRouter.get(
   "/",
@@ -19,22 +29,44 @@ employeeRouter.get(
   renderEmployee
 );
 
+
+// ========================
+// ADD EMPLOYEE
+// manager / admin
+// ========================
+
 employeeRouter.post(
   "/add",
   requireAuth,
+  requireRole("manager", "admin"),
   addEmployee
 );
 
-employeeRouter.post(
-  "/delete",
-  requireAuth,
-  deleteEmployee
-);
+
+// ========================
+// UPDATE EMPLOYEE
+// manager / admin
+// ========================
 
 employeeRouter.post(
   "/update",
   requireAuth,
+  requireRole("manager", "admin"),
   updateEmployee
 );
+
+
+// ========================
+// DELETE EMPLOYEE
+// admin only
+// ========================
+
+employeeRouter.post(
+  "/delete",
+  requireAuth,
+  requireRole("admin"),
+  deleteEmployee
+);
+
 
 module.exports = employeeRouter;

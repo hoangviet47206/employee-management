@@ -19,8 +19,11 @@ body {
 .container {
   display: flex;
   gap: 20px;
+
   max-width: 1600px;
+
   margin: 0 auto;
+
   align-items: flex-start;
 }
 
@@ -34,17 +37,23 @@ body {
   min-width: 0;
 
   background: #fff;
+
   padding: 24px;
 
   border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+
+  box-shadow:
+    0 4px 6px
+    rgba(0, 0, 0, 0.05);
 
   overflow-x: auto;
 }
 
 .title {
   font-size: 24px;
+
   margin-bottom: 20px;
+
   color: #2c3e50;
 }
 
@@ -59,8 +68,11 @@ body {
 
 .filter-group {
   display: flex;
+
   gap: 10px;
+
   align-items: center;
+
   flex-wrap: wrap;
 }
 
@@ -68,9 +80,11 @@ body {
   padding: 8px 12px;
 
   border: 1px solid #ccc;
+
   border-radius: 4px;
 
   outline: none;
+
   font-size: 14px;
 }
 
@@ -83,11 +97,13 @@ body {
   padding: 8px 16px;
 
   border: none;
+
   border-radius: 4px;
 
   cursor: pointer;
 
   font-weight: 600;
+
   font-size: 14px;
 
   text-decoration: none;
@@ -95,6 +111,7 @@ body {
 
 .filter-group button {
   background-color: #3498db;
+
   color: white;
 }
 
@@ -104,6 +121,7 @@ body {
 
 .clear-btn {
   background-color: #95a5a6;
+
   color: white;
 }
 
@@ -118,7 +136,9 @@ body {
 
 table {
   width: 100%;
+
   border-collapse: collapse;
+
   margin-top: 10px;
 }
 
@@ -127,29 +147,32 @@ table td {
   padding: 10px 12px;
 
   text-align: left;
+
   vertical-align: middle;
 
-  border-bottom: 1px solid #e0e0e0;
+  border-bottom:
+    1px solid #e0e0e0;
 
   font-size: 13px;
 }
 
 table th {
   background-color: #f8f9fa;
+
   color: #555;
 
-  /* Không cho tiêu đề như Reports To bị tách dòng */
   white-space: nowrap;
 }
 
 table td {
-  /* Giữ dữ liệu ngắn trên một dòng */
   white-space: nowrap;
 }
 
 table tbody tr {
   cursor: pointer;
-  transition: background-color 0.2s;
+
+  transition:
+    background-color 0.2s;
 }
 
 table tbody tr:hover {
@@ -157,7 +180,7 @@ table tbody tr:hover {
 }
 
 
-/* Job Title có thể dài nên cho phép xuống dòng */
+/* Job Title */
 
 table th:last-child,
 table td:last-child {
@@ -166,11 +189,12 @@ table td:last-child {
 
 table td:last-child {
   white-space: normal;
+
   line-height: 1.4;
 }
 
 
-/* Email cần thêm không gian */
+/* Email */
 
 table th:nth-child(5),
 table td:nth-child(5) {
@@ -178,7 +202,7 @@ table td:nth-child(5) {
 }
 
 
-/* First Name và Last Name */
+/* First Name / Last Name */
 
 table th:nth-child(2),
 table td:nth-child(2),
@@ -193,13 +217,16 @@ table td:nth-child(3) {
 table th:nth-child(7),
 table td:nth-child(7) {
   min-width: 90px;
+
   white-space: nowrap;
 }
 
 
 .no-data {
   text-align: center;
+
   color: #888;
+
   padding: 20px;
 }
 
@@ -210,32 +237,41 @@ table td:nth-child(7) {
 
 .pagination {
   display: flex;
+
   justify-content: center;
+
   align-items: center;
 
   gap: 8px;
+
   margin-top: 24px;
 }
 
 .pagination a {
   display: flex;
+
   justify-content: center;
+
   align-items: center;
 
   min-width: 38px;
+
   height: 38px;
 
   padding: 0 10px;
 
   border: 1px solid #ddd;
+
   border-radius: 5px;
 
   background-color: #fff;
+
   color: #3498db;
 
   text-decoration: none;
 
   font-size: 14px;
+
   font-weight: 600;
 
   transition: 0.2s;
@@ -243,12 +279,15 @@ table td:nth-child(7) {
 
 .pagination a:hover {
   background-color: #f1f7fd;
+
   border-color: #3498db;
 }
 
 .pagination a.active {
   background-color: #3498db;
+
   color: #fff;
+
   border-color: #3498db;
 }
 
@@ -261,21 +300,29 @@ table td:nth-child(7) {
   flex: 1;
 
   width: 320px;
+
   min-width: 300px;
+
   max-width: 340px;
 
   background: #fff;
+
   padding: 24px;
 
   border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+
+  box-shadow:
+    0 4px 6px
+    rgba(0, 0, 0, 0.05);
 
   height: fit-content;
 }
 
 .add-container h2 {
   font-size: 20px;
+
   margin-bottom: 20px;
+
   color: #2c3e50;
 }
 
@@ -294,6 +341,7 @@ table td:nth-child(7) {
   margin-bottom: 6px;
 
   font-size: 13px;
+
   font-weight: 500;
 
   color: #555;
@@ -305,6 +353,7 @@ table td:nth-child(7) {
   padding: 8px 12px;
 
   border: 1px solid #ccc;
+
   border-radius: 4px;
 
   font-size: 14px;
@@ -327,12 +376,15 @@ table td:nth-child(7) {
   padding: 10px;
 
   background-color: #2ecc71;
+
   color: white;
 
   border: none;
+
   border-radius: 4px;
 
   font-size: 15px;
+
   font-weight: 600;
 
   cursor: pointer;
@@ -355,14 +407,18 @@ table td:nth-child(7) {
   position: fixed;
 
   top: 0;
+
   left: 0;
 
   width: 100%;
+
   height: 100%;
 
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color:
+    rgba(0, 0, 0, 0.5);
 
   justify-content: center;
+
   align-items: center;
 
   z-index: 1000;
@@ -376,18 +432,24 @@ table td:nth-child(7) {
   background: #fff;
 
   width: 500px;
+
   max-width: 90%;
 
   border-radius: 8px;
 
   padding: 24px;
 
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  box-shadow:
+    0 5px 15px
+    rgba(0, 0, 0, 0.3);
 }
 
 .modal-header {
   display: flex;
-  justify-content: space-between;
+
+  justify-content:
+    space-between;
+
   align-items: center;
 
   margin-bottom: 20px;
@@ -395,6 +457,7 @@ table td:nth-child(7) {
 
 .modal-header h2 {
   font-size: 20px;
+
   color: #2c3e50;
 }
 
@@ -425,6 +488,7 @@ table td:nth-child(7) {
 
 .button-group {
   display: flex;
+
   justify-content: flex-end;
 
   gap: 12px;
@@ -436,9 +500,11 @@ table td:nth-child(7) {
   padding: 8px 18px;
 
   border: none;
+
   border-radius: 4px;
 
   font-size: 14px;
+
   font-weight: 600;
 
   cursor: pointer;
@@ -446,6 +512,7 @@ table td:nth-child(7) {
 
 .button-group button[type="submit"] {
   background-color: #3498db;
+
   color: white;
 }
 
@@ -455,10 +522,114 @@ table td:nth-child(7) {
 
 .button-group .delete-button {
   background-color: #e74c3c;
+
   color: white;
 }
 
 .button-group .delete-button:hover {
+  background-color: #c0392b;
+}
+
+
+/* ========================
+   USER / LOGOUT BAR
+======================== */
+
+.logout-form {
+  display: flex;
+
+  justify-content:
+    space-between;
+
+  align-items: center;
+
+  max-width: 1600px;
+
+  margin:
+    0 auto 15px;
+
+  padding: 12px 16px;
+
+  background-color: #fff;
+
+  border-radius: 8px;
+
+  box-shadow:
+    0 4px 6px
+    rgba(0, 0, 0, 0.05);
+}
+
+
+/* ========================
+   USER INFO
+======================== */
+
+.user-info {
+  display: flex;
+
+  align-items: center;
+
+  gap: 10px;
+
+  color: #2c3e50;
+
+  font-size: 14px;
+}
+
+.user-info strong {
+  font-weight: 600;
+}
+
+
+/* ========================
+   ROLE BADGE
+======================== */
+
+.role-badge {
+  display: inline-block;
+
+  padding: 4px 10px;
+
+  background-color: #3498db;
+
+  color: white;
+
+  border-radius: 20px;
+
+  font-size: 12px;
+
+  font-weight: 600;
+
+  text-transform: capitalize;
+}
+
+
+/* ========================
+   LOGOUT BUTTON
+======================== */
+
+.logout-btn {
+  padding: 8px 16px;
+
+  background-color: #e74c3c;
+
+  color: white;
+
+  border: none;
+
+  border-radius: 4px;
+
+  font-size: 14px;
+
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    background-color 0.2s;
+}
+
+.logout-btn:hover {
   background-color: #c0392b;
 }
 
@@ -475,43 +646,45 @@ table td:nth-child(7) {
 
   .employee-container {
     width: 100%;
+
     overflow-x: auto;
   }
 
   .add-container {
     width: 100%;
+
     min-width: 0;
+
     max-width: none;
   }
 }
-/* ========================
-   LOGOUT BUTTON
-======================== */
 
-.logout-form {
-  display: flex;
-  justify-content: flex-end;
 
-  max-width: 1600px;
+@media (max-width: 600px) {
 
-  margin: 0 auto 15px;
-}
+  body {
+    padding: 12px;
+  }
 
-.logout-btn {
-  padding: 8px 16px;
+  .logout-form {
+    padding: 10px 12px;
+  }
 
-  background-color: #e74c3c;
-  color: white;
+  .user-info {
+    gap: 6px;
 
-  border: none;
-  border-radius: 4px;
+    font-size: 13px;
+  }
 
-  font-size: 14px;
-  font-weight: 600;
+  .role-badge {
+    font-size: 11px;
 
-  cursor: pointer;
-}
+    padding: 3px 8px;
+  }
 
-.logout-btn:hover {
-  background-color: #c0392b;
+  .logout-btn {
+    padding: 7px 12px;
+
+    font-size: 13px;
+  }
 }

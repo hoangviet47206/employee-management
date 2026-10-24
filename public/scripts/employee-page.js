@@ -3,116 +3,108 @@ document.addEventListener("DOMContentLoaded", () => {
   // ELEMENTS
   // ========================
 
-  const rows = document.querySelectorAll(".employee-row");
+  const rows =
+    document.querySelectorAll(
+      "table tbody tr[data-employee]"
+    );
 
-  const modal = document.getElementById("editModal");
-  const closeBtn = document.getElementById("closeModal");
+  const modal =
+    document.querySelector(
+      ".edit-modal"
+    );
 
-  const updateForm = document.getElementById("updateForm");
-  const deleteForm = document.getElementById("deleteForm");
+  const closeBtn =
+    document.querySelector(
+      ".close-btn"
+    );
 
-  if (!modal || !updateForm || !deleteForm) {
+  const form =
+    document.querySelector(
+      ".edit-form"
+    );
+
+  // Employee không có modal
+  // nên JS kết thúc ở đây
+  if (!modal || !form) {
     return;
   }
 
 
   // ========================
-  // EDIT INPUTS
+  // EDIT FIELDS
   // ========================
 
-  const editEmployeeNumber =
-    document.getElementById("editEmployeeNumber");
-
-  const editFirstName =
-    document.getElementById("editFirstName");
-
-  const editLastName =
-    document.getElementById("editLastName");
-
-  const editExtension =
-    document.getElementById("editExtension");
-
-  const editEmail =
-    document.getElementById("editEmail");
-
-  const editOfficeCode =
-    document.getElementById("editOfficeCode");
-
-  const editReportsTo =
-    document.getElementById("editReportsTo");
-
-  const editJobTitle =
-    document.getElementById("editJobTitle");
-
-  const deleteEmployeeNumber =
-    document.getElementById("deleteEmployeeNumber");
+  const fields = [
+    "employeeNumber",
+    "firstName",
+    "lastName",
+    "extension",
+    "email",
+    "officeCode",
+    "reportsTo",
+    "jobTitle",
+  ];
 
 
   // ========================
-  // OPEN EDIT MODAL
+  // OPEN MODAL
   // ========================
 
   rows.forEach((row) => {
-    row.addEventListener("click", () => {
-      const employeeNumber =
-        row.dataset.employeeNumber;
+    row.addEventListener(
+      "click",
+      () => {
+        const employeeData =
+          row.getAttribute(
+            "data-employee"
+          );
 
-      const firstName =
-        row.dataset.firstName;
+        if (!employeeData) {
+          return;
+        }
 
-      const lastName =
-        row.dataset.lastName;
+        let employee;
 
-      const extension =
-        row.dataset.extension;
+        try {
+          employee =
+            JSON.parse(
+              employeeData
+            );
+        } catch (error) {
+          console.error(
+            "Invalid employee data:",
+            error
+          );
 
-      const email =
-        row.dataset.email;
-
-      const officeCode =
-        row.dataset.officeCode;
-
-      const reportsTo =
-        row.dataset.reportsTo;
-
-      const jobTitle =
-        row.dataset.jobTitle;
-
-
-      // Fill update form
-      editEmployeeNumber.value =
-        employeeNumber || "";
-
-      editFirstName.value =
-        firstName || "";
-
-      editLastName.value =
-        lastName || "";
-
-      editExtension.value =
-        extension || "";
-
-      editEmail.value =
-        email || "";
-
-      editOfficeCode.value =
-        officeCode || "";
-
-      editReportsTo.value =
-        reportsTo || "";
-
-      editJobTitle.value =
-        jobTitle || "";
+          return;
+        }
 
 
-      // Employee number dùng cho delete
-      deleteEmployeeNumber.value =
-        employeeNumber || "";
+        // Fill edit form
+        fields.forEach(
+          (field) => {
+            const input =
+              form.querySelector(
+                `#edit-${field}`
+              );
+
+            if (!input) {
+              return;
+            }
+
+            input.value =
+              employee[field] ??
+              "";
+          }
+        );
 
 
-      // Open modal
-      modal.classList.add("open");
-    });
+        // Open modal
+        modal.classList.add(
+          "open"
+        );
+      }
+    );
   });
 
 
@@ -121,45 +113,134 @@ document.addEventListener("DOMContentLoaded", () => {
   // ========================
 
   if (closeBtn) {
-    closeBtn.addEventListener("click", () => {
-      modal.classList.remove("open");
-    });
+    closeBtn.addEventListener(
+      "click",
+      () => {
+        modal.classList.remove(
+          "open"
+        );
+      }
+    );
   }
 
 
   // Click outside modal
-  modal.addEventListener("click", (event) => {
-    if (event.target === modal) {
-      modal.classList.remove("open");
+  modal.addEventListener(
+    "click",
+    (event) => {
+      if (
+        event.target === modal
+      ) {
+        modal.classList.remove(
+          "open"
+        );
+      }
     }
-  });
+  );
 
 
   // ========================
   // ESC TO CLOSE
   // ========================
 
-  document.addEventListener("keydown", (event) => {
-    if (
-      event.key === "Escape" &&
-      modal.classList.contains("open")
-    ) {
-      modal.classList.remove("open");
+  document.addEventListener(
+    "keydown",
+    (event) => {
+      if (
+        event.key ===
+          "Escape" &&
+        modal.classList.contains(
+          "open"
+        )
+      ) {
+        modal.classList.remove(
+          "open"
+        );
+      }
     }
-  });
+  );
 
 
   // ========================
-  // DELETE CONFIRMATION
+  // DELETE
+  // ADMIN ONLY
   // ========================
 
-  deleteForm.addEventListener("submit", (event) => {
-    const confirmed = confirm(
-      "Are you sure you want to delete this employee?"
+  const deleteBtn =
+    form.querySelector(
+      ".delete-button"
     );
 
-    if (!confirmed) {
-      event.preventDefault();
-    }
-  });
+  // Manager không có nút Delete,
+  // nên phần này chỉ chạy với admin
+  if (deleteBtn) {
+    deleteBtn.addEventListener(
+      "click",
+      async () => {
+        const employeeNumber =
+          form.querySelector(
+            "#edit-employeeNumber"
+          )?.value;
+
+        if (!employeeNumber) {
+          return;
+        }
+
+
+        const confirmed =
+          confirm(
+            "Are you sure you want to delete this employee?"
+          );
+
+        if (!confirmed) {
+          return;
+        }
+
+
+        try {
+          const response =
+            await fetch(
+              "/delete",
+              {
+                method: "POST",
+
+                headers: {
+                  "Content-Type":
+                    "application/json",
+                },
+
+                body:
+                  JSON.stringify({
+                    employeeNumber,
+                  }),
+              }
+            );
+
+
+          if (response.ok) {
+            location.reload();
+
+            return;
+          }
+
+
+          const message =
+            await response.text();
+
+          alert(
+            `Delete failed: ${message}`
+          );
+        } catch (error) {
+          console.error(
+            "Delete error:",
+            error
+          );
+
+          alert(
+            "Server error!"
+          );
+        }
+      }
+    );
+  }
 });
