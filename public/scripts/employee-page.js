@@ -3,32 +3,19 @@ document.addEventListener("DOMContentLoaded", () => {
   // ELEMENTS
   // ========================
 
-  const rows =
-    document.querySelectorAll(
-      "table tbody tr[data-employee]"
-    );
+  const rows = document.querySelectorAll("table tbody tr[data-employee]");
 
-  const modal =
-    document.querySelector(
-      ".edit-modal"
-    );
+  const modal = document.querySelector(".edit-modal");
 
-  const closeBtn =
-    document.querySelector(
-      ".close-btn"
-    );
+  const closeBtn = document.querySelector(".close-btn");
 
-  const form =
-    document.querySelector(
-      ".edit-form"
-    );
+  const form = document.querySelector(".edit-form");
 
   // Employee không có modal
   // nên JS kết thúc ở đây
   if (!modal || !form) {
     return;
   }
-
 
   // ========================
   // EDIT FIELDS
@@ -45,202 +32,135 @@ document.addEventListener("DOMContentLoaded", () => {
     "jobTitle",
   ];
 
-
   // ========================
   // OPEN MODAL
   // ========================
 
   rows.forEach((row) => {
-    row.addEventListener(
-      "click",
-      () => {
-        const employeeData =
-          row.getAttribute(
-            "data-employee"
-          );
+    row.addEventListener("click", () => {
+      const employeeData = row.getAttribute("data-employee");
 
-        if (!employeeData) {
-          return;
-        }
-
-        let employee;
-
-        try {
-          employee =
-            JSON.parse(
-              employeeData
-            );
-        } catch (error) {
-          console.error(
-            "Invalid employee data:",
-            error
-          );
-
-          return;
-        }
-
-
-        // Fill edit form
-        fields.forEach(
-          (field) => {
-            const input =
-              form.querySelector(
-                `#edit-${field}`
-              );
-
-            if (!input) {
-              return;
-            }
-
-            input.value =
-              employee[field] ??
-              "";
-          }
-        );
-
-
-        // Open modal
-        modal.classList.add(
-          "open"
-        );
+      if (!employeeData) {
+        return;
       }
-    );
-  });
 
+      let employee;
+
+      try {
+        employee = JSON.parse(employeeData);
+      } catch (error) {
+        console.error("Invalid employee data:", error);
+
+        return;
+      }
+
+      // Fill edit form
+      fields.forEach((field) => {
+        const input = form.querySelector(`#edit-${field}`);
+
+        if (!input) {
+          return;
+        }
+
+        input.value = employee[field] ?? "";
+      });
+
+      // Open modal
+      modal.classList.add("open");
+    });
+  });
 
   // ========================
   // CLOSE MODAL
   // ========================
 
   if (closeBtn) {
-    closeBtn.addEventListener(
-      "click",
-      () => {
-        modal.classList.remove(
-          "open"
-        );
-      }
-    );
+    closeBtn.addEventListener("click", () => {
+      modal.classList.remove("open");
+    });
   }
 
-
   // Click outside modal
-  modal.addEventListener(
-    "click",
-    (event) => {
-      if (
-        event.target === modal
-      ) {
-        modal.classList.remove(
-          "open"
-        );
-      }
+  modal.addEventListener("click", (event) => {
+    if (event.target === modal) {
+      modal.classList.remove("open");
     }
-  );
-
+  });
 
   // ========================
   // ESC TO CLOSE
   // ========================
 
-  document.addEventListener(
-    "keydown",
-    (event) => {
-      if (
-        event.key ===
-          "Escape" &&
-        modal.classList.contains(
-          "open"
-        )
-      ) {
-        modal.classList.remove(
-          "open"
-        );
-      }
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && modal.classList.contains("open")) {
+      modal.classList.remove("open");
     }
-  );
+  });
 
+  // ========================
+  // UPDATE SUBMIT
+  // ========================
 
+  form.addEventListener("submit", () => {
+    const saveBtn = form.querySelector('button[type="submit"]');
+
+    if (saveBtn) {
+      saveBtn.disabled = true;
+      saveBtn.textContent = "Saving...";
+    }
+  });
   // ========================
   // DELETE
   // ADMIN ONLY
   // ========================
 
-  const deleteBtn =
-    form.querySelector(
-      ".delete-button"
-    );
+  const deleteBtn = form.querySelector(".delete-button");
 
   // Manager không có nút Delete,
   // nên phần này chỉ chạy với admin
   if (deleteBtn) {
-    deleteBtn.addEventListener(
-      "click",
-      async () => {
-        const employeeNumber =
-          form.querySelector(
-            "#edit-employeeNumber"
-          )?.value;
+    deleteBtn.addEventListener("click", async () => {
+      const employeeNumber = form.querySelector("#edit-employeeNumber")?.value;
 
-        if (!employeeNumber) {
-          return;
-        }
-
-
-        const confirmed =
-          confirm(
-            "Are you sure you want to delete this employee?"
-          );
-
-        if (!confirmed) {
-          return;
-        }
-
-
-        try {
-          const response =
-            await fetch(
-              "/delete",
-              {
-                method: "POST",
-
-                headers: {
-                  "Content-Type":
-                    "application/json",
-                },
-
-                body:
-                  JSON.stringify({
-                    employeeNumber,
-                  }),
-              }
-            );
-
-
-          if (response.ok) {
-            location.reload();
-
-            return;
-          }
-
-
-          const message =
-            await response.text();
-
-          alert(
-            `Delete failed: ${message}`
-          );
-        } catch (error) {
-          console.error(
-            "Delete error:",
-            error
-          );
-
-          alert(
-            "Server error!"
-          );
-        }
+      if (!employeeNumber) {
+        return;
       }
-    );
+
+      const confirmed = confirm(
+        "Are you sure you want to delete this employee?",
+      );
+
+      if (!confirmed) {
+        return;
+      }
+
+      try {
+        const response = await fetch("/delete", {
+          method: "POST",
+
+          headers: {
+            "Content-Type": "application/json",
+          },
+
+          body: JSON.stringify({
+            employeeNumber,
+          }),
+        });
+
+        if (response.ok) {
+          location.reload();
+
+          return;
+        }
+
+        const message = await response.text();
+
+        alert(`Delete failed: ${message}`);
+      } catch (error) {
+        console.error("Delete error:", error);
+
+        alert("Server error!");
+      }
+    });
   }
 });

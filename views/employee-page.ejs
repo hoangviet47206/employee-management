@@ -163,8 +163,14 @@
             <% employees.forEach((employee) => { %>
 
               <tr
-                data-employee='<%= JSON.stringify(employee) %>'
-              >
+  data-employee='<%= JSON.stringify(employee) %>'
+  <% if (
+    currentUser.role === "manager" ||
+    currentUser.role === "admin"
+  ) { %>
+    title="Click to edit employee"
+  <% } %>
+>
 
                 <td>
                   <%= employee.employeeNumber %>
