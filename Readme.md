@@ -1,8 +1,10 @@
 # 👨‍💼 Employee Management System
 
-A full-stack Employee Management web application built with **Node.js, Express, EJS, and MySQL**.
+A full-stack Employee Management web application built with **Node.js, Express, EJS, MySQL, and Docker**.
 
-The project provides employee management features with **authentication, role-based authorization, filtering, pagination, and CRUD operations**.
+The application provides employee management features with **authentication, role-based authorization, filtering, pagination, CRUD operations, cloud deployment, and Docker support**.
+
+---
 
 ## 🌐 Live Demo
 
@@ -69,6 +71,10 @@ Authorization is enforced on both the frontend and backend.
 
 - MySQL
 
+### 🐳 Containerization
+
+- Docker
+
 ### ☁️ Deployment
 
 - **Application:** Render
@@ -112,6 +118,8 @@ employee-management/
 │
 ├── app.js
 ├── package.json
+├── Dockerfile
+├── .dockerignore
 ├── .env.example
 └── README.md
 ```
@@ -184,21 +192,69 @@ DB_SSL=false
 SESSION_SECRET=your_session_secret
 ```
 
-> 🔐 Do not commit the `.env` file to GitHub.
+> 🔐 Never commit the `.env` file to GitHub.
 
 ---
 
-## ▶️ Run the Application
+## ▶️ Run Locally
+
+Start the application with:
 
 ```bash
 npm start
 ```
 
-The application will run at:
+Then open:
 
 ```text
 http://localhost:8000
 ```
+
+---
+
+## 🐳 Docker
+
+The project can also be run inside a Docker container.
+
+### Build the Docker image
+
+```bash
+docker build -t employee-management .
+```
+
+### Run the container
+
+```bash
+docker run --env-file .env -p 8000:8000 employee-management
+```
+
+Then open:
+
+```text
+http://localhost:8000
+```
+
+### Docker Workflow
+
+```text
+Source Code
+    │
+    ▼
+Dockerfile
+    │
+    ▼
+Docker Image
+employee-management
+    │
+    ▼
+Docker Container
+    │
+    ▼
+Node.js Application
+localhost:8000
+```
+
+The `.dockerignore` file prevents unnecessary or sensitive files such as `.env`, `node_modules`, and Git metadata from being copied into the Docker image.
 
 ---
 
@@ -218,13 +274,13 @@ http://localhost:8000
 
 Production environment variables are configured directly on Render.
 
-The deployed application connects securely to the Aiven MySQL database using SSL.
+The deployed application connects to the Aiven MySQL database using SSL.
 
 ---
 
 ## 🔒 Security
 
-The project currently implements several basic security mechanisms:
+The project currently implements several security mechanisms:
 
 - 🔑 Password hashing using bcrypt
 - 🍪 Session-based authentication
@@ -234,7 +290,7 @@ The project currently implements several basic security mechanisms:
 - 🔐 Environment variables for credentials and secrets
 - 🔒 SSL connection to the production database
 
-Users cannot gain additional privileges simply by hiding or modifying frontend elements because authorization is also checked on the backend.
+Authorization is enforced on the backend, so users cannot gain additional privileges simply by modifying or hiding frontend elements.
 
 ---
 
@@ -252,8 +308,10 @@ Through this project, I practiced:
 - 🔄 Using SQL transactions
 - 🏗️ Separating routes, controllers, models, and views
 - 🔧 Managing environment variables
-- ☁️ Deploying a Node.js application
-- 🌐 Connecting a cloud-hosted application to a remote MySQL database
+- 🐳 Building Docker images
+- 📦 Running applications inside Docker containers
+- ☁️ Deploying a Node.js application to Render
+- 🌐 Connecting a cloud-hosted application to Aiven MySQL
 - 🌿 Using Git and GitHub during development
 
 ---
@@ -270,8 +328,9 @@ Possible improvements include:
 - 🚦 Rate limiting
 - 📝 Audit logs
 - 📊 Employee activity history
-- 📱 Improved responsive UI
 - 🧪 Automated testing
+- 🐳 Docker Compose
+- 📱 Improved responsive UI
 - 🌐 Custom domain
 
 ---
