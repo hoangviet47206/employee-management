@@ -1,19 +1,38 @@
 const dotenv = require("dotenv");
 const express = require("express");
+const session = require("express-session");
 const path = require("node:path");
+
 const employeeRouter = require("./routes/employeeRouter");
-const { error } = require("node:console");
+const authRouter = require("./routes/authRouter");
 
 dotenv.config();
+
 const app = express();
 const PORT = process.env.PORT || 8000;
 
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET || "dev-secret-key",
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      httpOnly: true,
+      sameSite: "lax",
+      secure: false,
+      maxAge: 1000 * 60 * 30,
+    },
+  })
+);
+
+app.use("/", authRouter);
 app.use("/", employeeRouter);
 
 app.listen(PORT, (error) => {

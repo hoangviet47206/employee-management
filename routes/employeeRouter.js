@@ -7,14 +7,34 @@ const {
   updateEmployee,
 } = require("../controllers/employeeController");
 
+const {
+  requireAuth,
+} = require("../middleware/authMiddleware");
+
 const employeeRouter = Router();
 
-employeeRouter.get("/", renderEmployee);
+employeeRouter.get(
+  "/",
+  requireAuth,
+  renderEmployee
+);
 
-employeeRouter.post("/add", addEmployee);
+employeeRouter.post(
+  "/add",
+  requireAuth,
+  addEmployee
+);
 
-employeeRouter.post("/delete", deleteEmployee);
+employeeRouter.post(
+  "/delete",
+  requireAuth,
+  deleteEmployee
+);
 
-employeeRouter.post("/update", updateEmployee);
+employeeRouter.post(
+  "/update",
+  requireAuth,
+  updateEmployee
+);
 
 module.exports = employeeRouter;

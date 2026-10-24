@@ -484,3 +484,34 @@ table td:nth-child(7) {
     max-width: none;
   }
 }
+/* ========================
+   LOGOUT BUTTON
+======================== */
+
+.logout-form {
+  display: flex;
+  justify-content: flex-end;
+
+  max-width: 1600px;
+
+  margin: 0 auto 15px;
+}
+
+.logout-btn {
+  padding: 8px 16px;
+
+  background-color: #e74c3c;
+  color: white;
+
+  border: none;
+  border-radius: 4px;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.logout-btn:hover {
+  background-color: #c0392b;
+}
