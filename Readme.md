@@ -1,8 +1,8 @@
 # 👨‍💼 Employee Management System
 
-A full-stack Employee Management web application built with **Node.js, Express, EJS, MySQL, and Docker**.
+A modern full-stack Employee Management web application built with **Node.js, Express, EJS, MySQL, and Docker**.
 
-The application provides employee management features with **authentication, role-based authorization, filtering, pagination, CRUD operations, cloud deployment, and Docker support**.
+The project includes **authentication, role-based access control, employee CRUD operations, cloud deployment, Docker support, responsive UI, animated landing page, toast notifications, and custom error pages**.
 
 ---
 
@@ -14,19 +14,60 @@ https://employee-management-od9a.onrender.com
 
 ---
 
-## ✨ Features
+## ✨ Overview
+
+The application is designed as a complete employee management system with a public landing page and a protected management dashboard.
+
+Main application flow:
+
+```text
+Welcome Page
+     ↓
+Login / Register
+     ↓
+Authentication
+     ↓
+Employee Dashboard
+     ↓
+Role-Based Actions
+```
+
+Main routes:
+
+```text
+/             → Welcome Page
+/login        → Login
+/register     → Register
+/employees    → Employee Dashboard
+```
+
+---
+
+## 🚀 Features
+
+### 🌐 Welcome Landing Page
+
+- Modern animated landing page
+- Project overview
+- Technology stack preview
+- Developer introduction
+- Login and Register navigation
+- Dynamic navigation for authenticated users
+- Animated background and dashboard preview
 
 ### 🔐 Authentication
 
-- ✅ User registration
-- ✅ User login
-- ✅ User logout
-- ✅ Session-based authentication
-- ✅ Password hashing with bcrypt
+- User registration
+- User login
+- User logout
+- Session-based authentication
+- Password hashing with bcrypt
+- Inline authentication error messages
+- Registration success notification
 
-### 🛡️ Role-Based Authorization
+### 🛡️ Role-Based Access Control
 
-The application supports three user roles:
+The application supports three roles:
 
 | Feature | 👤 Employee | 🧑‍💼 Manager | 👑 Admin |
 |---|---:|---:|---:|
@@ -36,17 +77,75 @@ The application supports three user roles:
 | Update employee | ❌ | ✅ | ✅ |
 | Delete employee | ❌ | ❌ | ✅ |
 
-Authorization is enforced on both the frontend and backend.
+Authorization is enforced on the **backend**, not only through the interface.
 
-### 📋 Employee Management
+---
 
-- 👀 Display employee list
-- 🔎 Search and filter employees
+## 📋 Employee Management
+
+The dashboard supports:
+
+- 👀 View employees
+- 🔎 Search by first name
+- 🔎 Search by last name
+- 🔎 Filter by job title
 - 📄 Pagination
-- ➕ Add new employees
+- ➕ Add employees
 - ✏️ Update employee information
 - 🗑️ Delete employees
-- 🔄 Handle related database records safely when deleting employees
+- 🔄 Safe handling of related records during deletion
+
+---
+
+## 🎨 User Interface
+
+The application includes a redesigned modern dashboard interface.
+
+### UI Features
+
+- Responsive layout
+- Glass-style cards
+- Animated background
+- Smooth page transitions
+- Hover animations
+- Animated dashboard preview
+- Loading states on buttons
+- Toast notifications
+- Custom delete confirmation modal
+- Responsive mobile layout
+- Consistent visual design across all pages
+
+### 🔔 Toast Notifications
+
+Successful actions display notifications such as:
+
+```text
+✓ Employee added successfully.
+✓ Employee updated successfully.
+✓ Employee deleted successfully.
+```
+
+Failed operations display an error toast instead of raw browser messages.
+
+---
+
+## ⚠️ Custom Error Pages
+
+The project includes custom pages for common application errors:
+
+```text
+403 → Access Denied
+404 → Page Not Found
+500 → Internal Server Error
+```
+
+Each error page includes:
+
+- Consistent application branding
+- Animated background
+- Error description
+- Back to Dashboard button
+- Go Back action
 
 ---
 
@@ -75,11 +174,15 @@ Authorization is enforced on both the frontend and backend.
 
 - Docker
 
-### ☁️ Deployment
+### ☁️ Cloud
 
-- **Application:** Render
-- **Database:** Aiven MySQL
-- **Source Control:** GitHub
+- Render
+- Aiven MySQL
+
+### 🌿 Version Control
+
+- Git
+- GitHub
 
 ---
 
@@ -103,9 +206,12 @@ employee-management/
 ├── public/
 │   ├── scripts/
 │   │   └── employee-page.js
+│   │
 │   └── styles/
 │       ├── auth.css
-│       └── employee-page.css
+│       ├── employee-page.css
+│       ├── error-page.css
+│       └── welcome.css
 │
 ├── routes/
 │   ├── authRouter.js
@@ -113,14 +219,16 @@ employee-management/
 │
 ├── views/
 │   ├── employee-page.ejs
+│   ├── error-page.ejs
 │   ├── login.ejs
-│   └── register.ejs
+│   ├── register.ejs
+│   └── welcome.ejs
 │
 ├── app.js
-├── package.json
 ├── Dockerfile
 ├── .dockerignore
 ├── .env.example
+├── package.json
 └── README.md
 ```
 
@@ -130,7 +238,7 @@ employee-management/
 
 The project uses the MySQL `classicmodels` database with an additional `users` table for authentication and authorization.
 
-Main tables used by the application include:
+Important tables include:
 
 ```text
 employees
@@ -141,11 +249,11 @@ users
 
 The `users` table stores:
 
-- 👤 username
-- 📧 email
-- 🔒 hashed password
-- 🛡️ user role
-- 🔗 linked employee ID
+- username
+- email
+- hashed password
+- user role
+- linked employee ID
 
 Available roles:
 
@@ -157,9 +265,27 @@ admin
 
 ---
 
+## 🔒 Security
+
+The project currently includes several security mechanisms:
+
+- 🔑 Password hashing with bcrypt
+- 🍪 Session-based authentication
+- 🚧 Protected routes
+- 🛡️ Role-based authorization middleware
+- 💉 Parameterized SQL queries
+- 🔐 Environment variables for secrets and credentials
+- 🔒 SSL connection to the production MySQL database
+- 🔁 Session regeneration after successful login
+- ⚠️ Custom authorization error handling
+
+The backend independently verifies user roles, so modifying frontend elements does not grant additional privileges.
+
+---
+
 ## 🚀 Installation
 
-### 1️⃣ Clone the repository
+### 1. Clone the repository
 
 ```bash
 git clone https://github.com/hoangviet47206/employee-management.git
@@ -169,15 +295,15 @@ git clone https://github.com/hoangviet47206/employee-management.git
 cd employee-management
 ```
 
-### 2️⃣ Install dependencies
+### 2. Install dependencies
 
 ```bash
 npm install
 ```
 
-### 3️⃣ Configure environment variables
+### 3. Configure environment variables
 
-Create a `.env` file in the root directory:
+Create a `.env` file:
 
 ```env
 PORT=8000
@@ -192,19 +318,31 @@ DB_SSL=false
 SESSION_SECRET=your_session_secret
 ```
 
-> 🔐 Never commit the `.env` file to GitHub.
+> 🔐 Never commit `.env` to GitHub.
 
 ---
 
 ## ▶️ Run Locally
 
-Start the application with:
+Start the application:
 
 ```bash
 npm start
 ```
 
-Then open:
+Or:
+
+```bash
+node app.js
+```
+
+For development with automatic restart:
+
+```bash
+node --watch app.js
+```
+
+Open:
 
 ```text
 http://localhost:8000
@@ -214,7 +352,7 @@ http://localhost:8000
 
 ## 🐳 Docker
 
-The project can also be run inside a Docker container.
+The application can also run inside a Docker container.
 
 ### Build the Docker image
 
@@ -238,59 +376,75 @@ http://localhost:8000
 
 ```text
 Source Code
-    │
-    ▼
+    ↓
 Dockerfile
-    │
-    ▼
+    ↓
 Docker Image
+    ↓
 employee-management
-    │
-    ▼
+    ↓
 Docker Container
-    │
-    ▼
+    ↓
 Node.js Application
-localhost:8000
 ```
 
-The `.dockerignore` file prevents unnecessary or sensitive files such as `.env`, `node_modules`, and Git metadata from being copied into the Docker image.
+The `.dockerignore` file prevents unnecessary or sensitive files such as `.env`, `node_modules`, and Git metadata from being copied into the image.
 
 ---
 
 ## ☁️ Deployment Architecture
 
 ```text
-        GitHub
-           │
-           ▼
-   Render Web Service
- Node.js + Express + EJS
-           │
-           ▼
-      Aiven MySQL
- classicmodels Database
+          GitHub
+             │
+             ▼
+     Render Web Service
+   Node.js + Express + EJS
+             │
+             ▼
+        Aiven MySQL
+     classicmodels Database
 ```
 
-Production environment variables are configured directly on Render.
+The application is automatically redeployed by Render after new commits are pushed to GitHub.
 
-The deployed application connects to the Aiven MySQL database using SSL.
+Production environment variables are configured directly in Render.
 
 ---
 
-## 🔒 Security
+## 🎭 Application Flow
 
-The project currently implements several security mechanisms:
+### Visitor
 
-- 🔑 Password hashing using bcrypt
-- 🍪 Session-based authentication
-- 🚧 Protected routes
-- 🛡️ Role-based authorization middleware
-- 💉 Parameterized SQL queries
-- 🔐 Environment variables for credentials and secrets
-- 🔒 SSL connection to the production database
+```text
+/
+↓
+Welcome Page
+↓
+Login / Register
+```
 
-Authorization is enforced on the backend, so users cannot gain additional privileges simply by modifying or hiding frontend elements.
+### Authenticated User
+
+```text
+Login
+↓
+Session Created
+↓
+/employees
+↓
+Employee Dashboard
+```
+
+### Logout
+
+```text
+Employee Dashboard
+↓
+Logout
+↓
+Welcome Page
+```
 
 ---
 
@@ -298,45 +452,79 @@ Authorization is enforced on the backend, so users cannot gain additional privil
 
 Through this project, I practiced:
 
-- ⚙️ Building a Node.js and Express web application
+- ⚙️ Building an Express web application
+- 🧱 Structuring routes, controllers, models, middleware, and views
 - 🗄️ Working with MySQL using `mysql2`
-- 🔐 Designing authentication workflows
-- 🍪 Implementing session management
+- 🔐 Building authentication workflows
+- 🔑 Hashing passwords with bcrypt
+- 🍪 Managing user sessions
 - 🛡️ Implementing Role-Based Access Control
-- 🧩 Writing Express middleware
-- ✏️ Performing CRUD operations
+- 💉 Writing parameterized SQL queries
 - 🔄 Using SQL transactions
-- 🏗️ Separating routes, controllers, models, and views
-- 🔧 Managing environment variables
-- 🐳 Building Docker images
-- 📦 Running applications inside Docker containers
-- ☁️ Deploying a Node.js application to Render
-- 🌐 Connecting a cloud-hosted application to Aiven MySQL
-- 🌿 Using Git and GitHub during development
+- ✏️ Building CRUD functionality
+- 🎨 Designing a responsive user interface
+- ✨ Adding CSS and JavaScript animations
+- 🔔 Building toast notifications
+- ⚠️ Designing custom error pages
+- 🐳 Building and running Docker images
+- ☁️ Deploying Node.js applications to Render
+- 🌐 Connecting to Aiven MySQL
+- 🌿 Using Git and GitHub throughout development
 
 ---
 
 ## 🔮 Future Improvements
 
-Possible improvements include:
+Possible future improvements include:
 
-- 🗂️ Persistent session storage
-- ✅ Form validation
-- ⚠️ Improved error handling
+- 🗂️ Persistent production session storage
+- ✅ Advanced server-side validation
 - 🛡️ CSRF protection
 - 🔒 Security headers
 - 🚦 Rate limiting
-- 📝 Audit logs
+- 📝 Audit logging
 - 📊 Employee activity history
+- 🔍 Advanced employee search
+- 📊 Dashboard statistics
 - 🧪 Automated testing
 - 🐳 Docker Compose
-- 📱 Improved responsive UI
+- ⚙️ CI/CD workflow
+- 🌙 Dark mode
 - 🌐 Custom domain
 
 ---
 
-## 👨‍💻 Author
+## 👨‍💻 Developer
 
 **Nguyen Hoang Viet**
 
+Network Security student interested in:
+
+- 🔐 Cybersecurity
+- 🌐 Web Development
+- 🌍 Networking
+- 🐳 Docker
+- 🛡️ Security Engineering
+
 GitHub: [hoangviet47206](https://github.com/hoangviet47206)
+
+---
+
+## 📌 Project Status
+
+```text
+Authentication             ✅
+Role-Based Authorization   ✅
+Employee CRUD              ✅
+Search & Filtering         ✅
+Pagination                 ✅
+Responsive UI              ✅
+Animated Landing Page      ✅
+Toast Notifications        ✅
+Custom Error Pages         ✅
+Docker                     ✅
+Cloud Database             ✅
+Public Deployment          ✅
+```
+
+**Status: Active / Portfolio Project**
