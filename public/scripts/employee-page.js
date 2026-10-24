@@ -67,6 +67,7 @@ function createToastContainer() {
   toast.className =
     "app-toast";
 
+
   toast.innerHTML = `
     <div class="toast-status">
       ✓
@@ -92,6 +93,7 @@ function createToastContainer() {
       ×
     </button>
   `;
+
 
   document.body.appendChild(
     toast
@@ -322,6 +324,7 @@ function setButtonLoading(
       "loading"
     );
 
+
     button.innerHTML = `
       <span class="button-spinner"></span>
       ${loadingText}
@@ -390,10 +393,12 @@ document
               error
             );
 
+
             showToast(
               "Could not load employee information.",
               "error"
             );
+
 
             return;
           }
@@ -438,10 +443,9 @@ document
               ]) => {
 
                 const input =
-                  document
-                    .querySelector(
-                      selector
-                    );
+                  document.querySelector(
+                    selector
+                  );
 
 
                 if (!input) {
@@ -605,7 +609,7 @@ if (addForm) {
 
         window.location.href =
           response.url ||
-          "/";
+          "/employees";
 
       } catch (error) {
 
@@ -709,7 +713,7 @@ if (editForm) {
 
         window.location.href =
           response.url ||
-          "/";
+          "/employees";
 
       } catch (error) {
 
@@ -738,7 +742,7 @@ if (editForm) {
 
 
 // ========================
-// OPEN DELETE CONFIRMATION
+// OPEN DELETE CONFIRM
 // ========================
 
 if (deleteBtn) {
@@ -775,11 +779,14 @@ if (deleteBtn) {
           "error"
         );
 
+
         return;
       }
 
 
-      deleteConfirmModal.dataset.employeeNumber =
+      deleteConfirmModal
+        .dataset
+        .employeeNumber =
         employeeNumber;
 
 
@@ -792,7 +799,8 @@ if (deleteBtn) {
             .trim();
 
 
-        deleteEmployeeLabel.textContent =
+        deleteEmployeeLabel
+          .textContent =
           fullName
             ? `${fullName} (#${employeeNumber})`
             : `employee #${employeeNumber}`;
@@ -836,31 +844,33 @@ function closeDeleteModal() {
 
 if (cancelDeleteBtn) {
 
-  cancelDeleteBtn.addEventListener(
-    "click",
-    closeDeleteModal
-  );
+  cancelDeleteBtn
+    .addEventListener(
+      "click",
+      closeDeleteModal
+    );
 
 }
 
 
 if (deleteConfirmModal) {
 
-  deleteConfirmModal.addEventListener(
-    "click",
-    (event) => {
+  deleteConfirmModal
+    .addEventListener(
+      "click",
+      (event) => {
 
-      if (
-        event.target ===
-        deleteConfirmModal
-      ) {
+        if (
+          event.target ===
+          deleteConfirmModal
+        ) {
 
-        closeDeleteModal();
+          closeDeleteModal();
+
+        }
 
       }
-
-    }
-  );
+    );
 
 }
 
@@ -871,101 +881,105 @@ if (deleteConfirmModal) {
 
 if (confirmDeleteBtn) {
 
-  confirmDeleteBtn.addEventListener(
-    "click",
-    async () => {
+  confirmDeleteBtn
+    .addEventListener(
+      "click",
+      async () => {
 
-      const employeeNumber =
-        deleteConfirmModal
-          ?.dataset
-          ?.employeeNumber;
-
-
-      if (!employeeNumber) {
-
-        showToast(
-          "Employee number is missing.",
-          "error"
-        );
-
-        return;
-      }
-
-
-      setButtonLoading(
-        confirmDeleteBtn,
-        true,
-        "Deleting..."
-      );
-
-
-      try {
-
-        const response =
-          await fetch(
-            "/delete",
-            {
-
-              method:
-                "POST",
-
-              headers: {
-
-                "Content-Type":
-                  "application/json",
-
-              },
-
-              body:
-                JSON.stringify({
-                  employeeNumber,
-                }),
-
-            }
-          );
+        const employeeNumber =
+          deleteConfirmModal
+            ?.dataset
+            ?.employeeNumber;
 
 
         if (
-          !response.ok
+          !employeeNumber
         ) {
 
-          throw new Error(
-            "Delete failed"
+          showToast(
+            "Employee number is missing.",
+            "error"
           );
 
+
+          return;
         }
-
-
-        saveToast(
-          "Employee deleted successfully."
-        );
-
-
-        window.location.href =
-          "/";
-
-      } catch (error) {
-
-        console.error(
-          error
-        );
-
-
-        showToast(
-          "Unable to delete employee.",
-          "error"
-        );
 
 
         setButtonLoading(
           confirmDeleteBtn,
-          false
+          true,
+          "Deleting..."
         );
 
-      }
 
-    }
-  );
+        try {
+
+          const response =
+            await fetch(
+              "/employees/delete",
+              {
+
+                method:
+                  "POST",
+
+                headers: {
+
+                  "Content-Type":
+                    "application/json",
+
+                },
+
+                body:
+                  JSON.stringify({
+                    employeeNumber,
+                  }),
+
+              }
+            );
+
+
+          if (
+            !response.ok
+          ) {
+
+            throw new Error(
+              "Delete failed"
+            );
+
+          }
+
+
+          saveToast(
+            "Employee deleted successfully."
+          );
+
+
+          window.location.href =
+            "/employees";
+
+        } catch (error) {
+
+          console.error(
+            error
+          );
+
+
+          showToast(
+            "Unable to delete employee.",
+            "error"
+          );
+
+
+          setButtonLoading(
+            confirmDeleteBtn,
+            false
+          );
+
+        }
+
+      }
+    );
 
 }
 

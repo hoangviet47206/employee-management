@@ -2,74 +2,129 @@ const db = require("../models/queries");
 
 
 // ========================
-// RENDER EMPLOYEE
+// RENDER EMPLOYEE PAGE
 // ========================
 
 const renderEmployee = async (req, res) => {
   try {
-    const page = parseInt(req.query.page) || 1;
+    const page =
+      parseInt(
+        req.query.page,
+        10
+      ) || 1;
+
 
     const filters = {
-      employeeNumber: req.query.employeeNumber || "",
-      lastName: req.query.lastName || "",
-      firstName: req.query.firstName || "",
-      extension: req.query.extension || "",
-      email: req.query.email || "",
-      officeCode: req.query.officeCode || "",
-      reportsTo: req.query.reportsTo || "",
-      jobTitle: req.query.jobTitle || "",
+      employeeNumber:
+        req.query.employeeNumber || "",
+
+      lastName:
+        req.query.lastName || "",
+
+      firstName:
+        req.query.firstName || "",
+
+      extension:
+        req.query.extension || "",
+
+      email:
+        req.query.email || "",
+
+      officeCode:
+        req.query.officeCode || "",
+
+      reportsTo:
+        req.query.reportsTo || "",
+
+      jobTitle:
+        req.query.jobTitle || "",
     };
 
+
     const isFiltering =
-      Object.values(filters).some((v) => v);
+      Object.values(
+        filters
+      ).some(
+        (value) => value
+      );
+
 
     let employees;
     let totalItems;
 
+
     if (isFiltering) {
+
       employees =
         await db.getEmployees(
           page,
           filters
         );
 
+
       totalItems =
         await db.getEmployeeCount(
           filters
         );
+
     } else {
+
       employees =
-        await db.getEmployees(page);
+        await db.getEmployees(
+          page
+        );
+
 
       totalItems =
         await db.getEmployeeCount();
+
     }
+
 
     const totalPages =
       Math.ceil(
-        totalItems / db.PAGE_SIZE
+        totalItems /
+        db.PAGE_SIZE
       );
 
-    res.render(
+
+    return res.render(
       "employee-page",
       {
         employees,
-        totalEmployees: totalItems,
-        currentpage: page,
+
+        totalEmployees:
+          totalItems,
+
+        currentpage:
+          page,
+
         totalPages,
+
         filters,
       }
     );
+
   } catch (error) {
-    console.error(error);
+
+    console.error(
+      "Render employee error:",
+      error
+    );
+
 
     return res
       .status(500)
       .render(
         "error-page",
         {
+          statusCode: 500,
+
+          title:
+            "Unable to Load Employees",
+
           message:
-            error.message,
+            "The employee list could not be loaded. Please try again.",
         }
       );
   }
@@ -77,22 +132,34 @@ const renderEmployee = async (req, res) => {
 
 
 // ========================
-// VALIDATION
+// VALIDATION HELPERS
 // ========================
 
-const validateEmail = (email) => {
+const validateEmail = (
+  email
+) => {
+
   const regex =
     /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-  return regex.test(email);
+
+  return regex.test(
+    email
+  );
 };
 
-const validateNumber = (value) => {
+
+const validateNumber = (
+  value
+) => {
+
   return (
     value !== undefined &&
     value !== null &&
     value !== "" &&
-    !isNaN(Number(value))
+    !Number.isNaN(
+      Number(value)
+    )
   );
 };
 
@@ -101,248 +168,301 @@ const validateNumber = (value) => {
 // ADD EMPLOYEE
 // ========================
 
-const addEmployee = async (req, res) => {
-  const {
-    employeeNumber,
-    lastName,
-    firstName,
-    extension,
-    email,
-    officeCode,
-    reportsTo,
-    jobTitle,
-  } = req.body;
+const addEmployee =
+  async (req, res) => {
 
-
-  if (
-    !employeeNumber ||
-    !validateNumber(
-      employeeNumber
-    )
-  ) {
-    return res
-      .status(400)
-      .render(
-        "error-page",
-        {
-          message:
-            "Invalid employee number",
-        }
-      );
-  }
-
-
-  if (
-    !lastName ||
-    lastName.length > 50
-  ) {
-    return res
-      .status(400)
-      .render(
-        "error-page",
-        {
-          message:
-            "Invalid last name",
-        }
-      );
-  }
-
-
-  if (
-    !firstName ||
-    firstName.length > 50
-  ) {
-    return res
-      .status(400)
-      .render(
-        "error-page",
-        {
-          message:
-            "Invalid first name",
-        }
-      );
-  }
-
-
-  if (
-    !jobTitle ||
-    jobTitle.length > 50
-  ) {
-    return res
-      .status(400)
-      .render(
-        "error-page",
-        {
-          message:
-            "Invalid job title",
-        }
-      );
-  }
-
-
-  if (
-    !email ||
-    !validateEmail(email)
-  ) {
-    return res
-      .status(400)
-      .render(
-        "error-page",
-        {
-          message:
-            "Invalid email",
-        }
-      );
-  }
-
-
-  if (
-    extension &&
-    extension.length > 10
-  ) {
-    return res
-      .status(400)
-      .render(
-        "error-page",
-        {
-          message:
-            "Extension too long",
-        }
-      );
-  }
-
-
-  if (
-    officeCode &&
-    officeCode.length > 10
-  ) {
-    return res
-      .status(400)
-      .render(
-        "error-page",
-        {
-          message:
-            "Office code too long",
-        }
-      );
-  }
-
-
-  if (
-    reportsTo &&
-    !validateNumber(reportsTo)
-  ) {
-    return res
-      .status(400)
-      .render(
-        "error-page",
-        {
-          message:
-            "reportsTo must be a number",
-        }
-      );
-  }
-
-
-  try {
-    await db.addNewEmployee({
-      employeeNumber:
-        Number(employeeNumber),
-
+    const {
+      employeeNumber,
       lastName,
       firstName,
       extension,
       email,
       officeCode,
-
-      reportsTo:
-        reportsTo
-          ? Number(reportsTo)
-          : null,
-
+      reportsTo,
       jobTitle,
-    });
-
-    res.redirect("/");
-  } catch (error) {
-    console.error(error);
-
-    return res
-      .status(500)
-      .render(
-        "error-page",
-        {
-          message:
-            error.message,
-        }
-      );
-  }
-};
+    } = req.body;
 
 
-// ========================
-// DELETE EMPLOYEE
-// ========================
+    // Employee Number
+    if (
+      !employeeNumber ||
+      !validateNumber(
+        employeeNumber
+      )
+    ) {
 
-const deleteEmployee = async (req, res) => {
-  try {
-    const employeeNumber =
-      parseInt(
-        req.body.employeeNumber
-      );
-
-    if (!employeeNumber) {
       return res
         .status(400)
         .render(
           "error-page",
           {
+            statusCode: 400,
+
+            title:
+              "Invalid Employee",
+
             message:
-              "Invalid employee number",
+              "Employee number is invalid.",
           }
         );
     }
 
-    await db.deleteEmployee(
-      employeeNumber
-    );
 
-    res.redirect("/");
-  } catch (error) {
-    console.error(error);
+    // Last Name
+    if (
+      !lastName ||
+      lastName.length > 50
+    ) {
 
-    return res
-      .status(500)
-      .render(
-        "error-page",
-        {
-          message:
-            error.message,
-        }
+      return res
+        .status(400)
+        .render(
+          "error-page",
+          {
+            statusCode: 400,
+
+            title:
+              "Invalid Employee",
+
+            message:
+              "Last name is invalid.",
+          }
+        );
+    }
+
+
+    // First Name
+    if (
+      !firstName ||
+      firstName.length > 50
+    ) {
+
+      return res
+        .status(400)
+        .render(
+          "error-page",
+          {
+            statusCode: 400,
+
+            title:
+              "Invalid Employee",
+
+            message:
+              "First name is invalid.",
+          }
+        );
+    }
+
+
+    // Job Title
+    if (
+      !jobTitle ||
+      jobTitle.length > 50
+    ) {
+
+      return res
+        .status(400)
+        .render(
+          "error-page",
+          {
+            statusCode: 400,
+
+            title:
+              "Invalid Employee",
+
+            message:
+              "Job title is invalid.",
+          }
+        );
+    }
+
+
+    // Email
+    if (
+      !email ||
+      !validateEmail(
+        email
+      )
+    ) {
+
+      return res
+        .status(400)
+        .render(
+          "error-page",
+          {
+            statusCode: 400,
+
+            title:
+              "Invalid Email",
+
+            message:
+              "Please enter a valid email address.",
+          }
+        );
+    }
+
+
+    // Extension
+    if (
+      extension &&
+      extension.length > 10
+    ) {
+
+      return res
+        .status(400)
+        .render(
+          "error-page",
+          {
+            statusCode: 400,
+
+            title:
+              "Invalid Extension",
+
+            message:
+              "Extension is too long.",
+          }
+        );
+    }
+
+
+    // Office Code
+    if (
+      officeCode &&
+      officeCode.length > 10
+    ) {
+
+      return res
+        .status(400)
+        .render(
+          "error-page",
+          {
+            statusCode: 400,
+
+            title:
+              "Invalid Office Code",
+
+            message:
+              "Office code is too long.",
+          }
+        );
+    }
+
+
+    // Reports To
+    if (
+      reportsTo &&
+      !validateNumber(
+        reportsTo
+      )
+    ) {
+
+      return res
+        .status(400)
+        .render(
+          "error-page",
+          {
+            statusCode: 400,
+
+            title:
+              "Invalid Manager",
+
+            message:
+              "Reports To must be a valid employee number.",
+          }
+        );
+    }
+
+
+    try {
+
+      await db.addNewEmployee({
+        employeeNumber:
+          Number(
+            employeeNumber
+          ),
+
+        lastName,
+
+        firstName,
+
+        extension,
+
+        email,
+
+        officeCode,
+
+        reportsTo:
+          reportsTo
+            ? Number(
+                reportsTo
+              )
+            : null,
+
+        jobTitle,
+      });
+
+
+      return res.redirect(
+        "/employees"
       );
-  }
-};
+
+    } catch (error) {
+
+      console.error(
+        "Add employee error:",
+        error
+      );
+
+
+      return res
+        .status(500)
+        .render(
+          "error-page",
+          {
+            statusCode: 500,
+
+            title:
+              "Unable to Add Employee",
+
+            message:
+              error.message ||
+              "The employee could not be added.",
+          }
+        );
+    }
+  };
 
 
 // ========================
 // UPDATE EMPLOYEE
 // ========================
 
-const updateEmployee = async (req, res) => {
-  try {
+const updateEmployee =
+  async (req, res) => {
+
     const employeeNumber =
       parseInt(
-        req.body.employeeNumber
+        req.body.employeeNumber,
+        10
       );
 
-    if (!employeeNumber) {
+
+    if (
+      !employeeNumber
+    ) {
+
       return res
         .status(400)
         .render(
           "error-page",
           {
+            statusCode: 400,
+
+            title:
+              "Invalid Employee",
+
             message:
-              "Invalid employee number",
+              "Employee number is invalid.",
           }
         );
     }
@@ -363,13 +483,19 @@ const updateEmployee = async (req, res) => {
       lastName &&
       lastName.length > 50
     ) {
+
       return res
         .status(400)
         .render(
           "error-page",
           {
+            statusCode: 400,
+
+            title:
+              "Invalid Last Name",
+
             message:
-              "Last name too long",
+              "Last name is too long.",
           }
         );
     }
@@ -379,13 +505,19 @@ const updateEmployee = async (req, res) => {
       firstName &&
       firstName.length > 50
     ) {
+
       return res
         .status(400)
         .render(
           "error-page",
           {
+            statusCode: 400,
+
+            title:
+              "Invalid First Name",
+
             message:
-              "First name too long",
+              "First name is too long.",
           }
         );
     }
@@ -395,13 +527,19 @@ const updateEmployee = async (req, res) => {
       jobTitle &&
       jobTitle.length > 50
     ) {
+
       return res
         .status(400)
         .render(
           "error-page",
           {
+            statusCode: 400,
+
+            title:
+              "Invalid Job Title",
+
             message:
-              "Job title too long",
+              "Job title is too long.",
           }
         );
     }
@@ -409,15 +547,23 @@ const updateEmployee = async (req, res) => {
 
     if (
       email &&
-      !validateEmail(email)
+      !validateEmail(
+        email
+      )
     ) {
+
       return res
         .status(400)
         .render(
           "error-page",
           {
+            statusCode: 400,
+
+            title:
+              "Invalid Email",
+
             message:
-              "Invalid email",
+              "Please enter a valid email address.",
           }
         );
     }
@@ -427,13 +573,19 @@ const updateEmployee = async (req, res) => {
       extension &&
       extension.length > 10
     ) {
+
       return res
         .status(400)
         .render(
           "error-page",
           {
+            statusCode: 400,
+
+            title:
+              "Invalid Extension",
+
             message:
-              "Extension too long",
+              "Extension is too long.",
           }
         );
     }
@@ -443,13 +595,19 @@ const updateEmployee = async (req, res) => {
       officeCode &&
       officeCode.length > 10
     ) {
+
       return res
         .status(400)
         .render(
           "error-page",
           {
+            statusCode: 400,
+
+            title:
+              "Invalid Office Code",
+
             message:
-              "Office code too long",
+              "Office code is too long.",
           }
         );
     }
@@ -457,15 +615,23 @@ const updateEmployee = async (req, res) => {
 
     if (
       reportsTo &&
-      !validateNumber(reportsTo)
+      !validateNumber(
+        reportsTo
+      )
     ) {
+
       return res
         .status(400)
         .render(
           "error-page",
           {
+            statusCode: 400,
+
+            title:
+              "Invalid Manager",
+
             message:
-              "reportsTo must be a number",
+              "Reports To must be a valid employee number.",
           }
         );
     }
@@ -473,49 +639,146 @@ const updateEmployee = async (req, res) => {
 
     const updateData = {
       employeeNumber,
+
       lastName,
+
       firstName,
+
       extension,
+
       email,
+
       officeCode,
 
       reportsTo:
         reportsTo
-          ? Number(reportsTo)
+          ? Number(
+              reportsTo
+            )
           : null,
 
       jobTitle,
     };
 
 
-    await db.updateEmployee(
-      updateData
-    );
+    try {
 
-    res.redirect("/");
-  } catch (error) {
-    console.error(error);
-
-    return res
-      .status(500)
-      .render(
-        "error-page",
-        {
-          message:
-            error.message,
-        }
+      await db.updateEmployee(
+        updateData
       );
-  }
-};
+
+
+      return res.redirect(
+        "/employees"
+      );
+
+    } catch (error) {
+
+      console.error(
+        "Update employee error:",
+        error
+      );
+
+
+      return res
+        .status(500)
+        .render(
+          "error-page",
+          {
+            statusCode: 500,
+
+            title:
+              "Unable to Update Employee",
+
+            message:
+              error.message ||
+              "The employee could not be updated.",
+          }
+        );
+    }
+  };
 
 
 // ========================
-// EXPORT
+// DELETE EMPLOYEE
+// ========================
+
+const deleteEmployee =
+  async (req, res) => {
+
+    const employeeNumber =
+      parseInt(
+        req.body.employeeNumber,
+        10
+      );
+
+
+    if (
+      !employeeNumber
+    ) {
+
+      return res
+        .status(400)
+        .render(
+          "error-page",
+          {
+            statusCode: 400,
+
+            title:
+              "Invalid Employee",
+
+            message:
+              "Employee number is invalid.",
+          }
+        );
+    }
+
+
+    try {
+
+      await db.deleteEmployee(
+        employeeNumber
+      );
+
+
+      return res.redirect(
+        "/employees"
+      );
+
+    } catch (error) {
+
+      console.error(
+        "Delete employee error:",
+        error
+      );
+
+
+      return res
+        .status(500)
+        .render(
+          "error-page",
+          {
+            statusCode: 500,
+
+            title:
+              "Unable to Delete Employee",
+
+            message:
+              error.message ||
+              "The employee could not be deleted.",
+          }
+        );
+    }
+  };
+
+
+// ========================
+// EXPORTS
 // ========================
 
 module.exports = {
   renderEmployee,
   addEmployee,
-  deleteEmployee,
   updateEmployee,
+  deleteEmployee,
 };

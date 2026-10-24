@@ -50,6 +50,7 @@
       </div>
 
       <div>
+
         <p class="topbar-eyebrow">
           Employee Management
         </p>
@@ -57,6 +58,7 @@
         <h2 class="topbar-title">
           Dashboard
         </h2>
+
       </div>
 
     </div>
@@ -104,8 +106,9 @@
   </header>
 
 
+
   <!-- ========================
-       MAIN CONTAINER
+       MAIN
   ========================= -->
 
   <main class="container">
@@ -120,6 +123,7 @@
       <div class="section-heading">
 
         <div>
+
           <p class="section-eyebrow">
             Team overview
           </p>
@@ -127,7 +131,9 @@
           <h1 class="title">
             Employee List
           </h1>
+
         </div>
+
 
         <span class="employee-count">
           <%= totalEmployees %> employees
@@ -136,12 +142,13 @@
       </div>
 
 
+
       <!-- ========================
            FILTER
       ========================= -->
 
       <form
-        action="/"
+        action="/employees"
         method="GET"
         class="filter-form"
       >
@@ -177,7 +184,7 @@
           </button>
 
           <a
-            href="/"
+            href="/employees"
             class="clear-btn"
           >
             Clear
@@ -186,6 +193,7 @@
         </div>
 
       </form>
+
 
 
       <!-- ========================
@@ -238,38 +246,51 @@
                 >
 
                   <td>
+
                     <span class="employee-number">
                       #<%= employee.employeeNumber %>
                     </span>
+
                   </td>
 
+
                   <td>
+
                     <strong>
                       <%= employee.firstName %>
                     </strong>
+
                   </td>
+
 
                   <td>
                     <%= employee.lastName %>
                   </td>
 
+
                   <td>
                     <%= employee.extension %>
                   </td>
+
 
                   <td class="employee-email">
                     <%= employee.email %>
                   </td>
 
+
                   <td>
+
                     <span class="office-badge">
                       <%= employee.officeCode %>
                     </span>
+
                   </td>
+
 
                   <td>
                     <%= employee.reportsTo || "-" %>
                   </td>
+
 
                   <td>
                     <%= employee.jobTitle %>
@@ -318,6 +339,7 @@
       </div>
 
 
+
       <!-- ========================
            PAGINATION
       ========================= -->
@@ -333,7 +355,7 @@
           ) { %>
 
             <a
-              href="/?page=<%= i %>&firstName=<%= encodeURIComponent(filters.firstName || '') %>&lastName=<%= encodeURIComponent(filters.lastName || '') %>&jobTitle=<%= encodeURIComponent(filters.jobTitle || '') %>"
+              href="/employees?page=<%= i %>&firstName=<%= encodeURIComponent(filters.firstName || '') %>&lastName=<%= encodeURIComponent(filters.lastName || '') %>&jobTitle=<%= encodeURIComponent(filters.jobTitle || '') %>"
               class="<%= currentpage === i ? 'active' : '' %>"
             >
               <%= i %>
@@ -346,6 +368,7 @@
       <% } %>
 
     </section>
+
 
 
     <!-- ========================
@@ -366,6 +389,7 @@
           </div>
 
           <div>
+
             <p class="section-eyebrow">
               Team member
             </p>
@@ -373,16 +397,18 @@
             <h2>
               Add Employee
             </h2>
+
           </div>
 
         </div>
 
 
         <form
-          action="/add"
+          action="/employees/add"
           method="POST"
           class="add-form"
         >
+
 
           <div class="form-group">
 
@@ -534,6 +560,7 @@
     <% } %>
 
 
+
     <!-- ========================
          EDIT MODAL
     ========================= -->
@@ -574,7 +601,7 @@
 
 
           <form
-            action="/update"
+            action="/employees/update"
             method="POST"
             class="edit-form"
           >
@@ -743,64 +770,77 @@
       </div>
 
     <% } %>
-<!-- ========================
-     DELETE CONFIRM MODAL
-========================= -->
 
-<% if (currentUser.role === "admin") { %>
 
-  <div
-    class="delete-confirm-modal"
-    id="delete-confirm-modal"
-  >
 
-    <div class="delete-confirm-card">
+    <!-- ========================
+         DELETE CONFIRM MODAL
+    ========================= -->
 
-      <div class="delete-warning-icon">
-        !
+    <% if (
+      currentUser.role === "admin"
+    ) { %>
+
+      <div
+        class="delete-confirm-modal"
+        id="delete-confirm-modal"
+      >
+
+        <div class="delete-confirm-card">
+
+          <div class="delete-warning-icon">
+            !
+          </div>
+
+
+          <h2>
+            Delete Employee?
+          </h2>
+
+
+          <p>
+            You are about to delete
+
+            <strong id="delete-employee-label">
+              this employee
+            </strong>.
+          </p>
+
+
+          <span class="delete-warning-text">
+            This action cannot be undone.
+          </span>
+
+
+          <div class="delete-confirm-actions">
+
+            <button
+              type="button"
+              class="cancel-delete-btn"
+              id="cancel-delete-btn"
+            >
+              Cancel
+            </button>
+
+
+            <button
+              type="button"
+              class="confirm-delete-btn"
+              id="confirm-delete-btn"
+            >
+              Delete Employee
+            </button>
+
+          </div>
+
+        </div>
+
       </div>
 
-      <h2>
-        Delete Employee?
-      </h2>
+    <% } %>
 
-      <p>
-        You are about to delete
-        <strong id="delete-employee-label">
-          this employee
-        </strong>.
-      </p>
-
-      <span class="delete-warning-text">
-        This action cannot be undone.
-      </span>
-
-      <div class="delete-confirm-actions">
-
-        <button
-          type="button"
-          class="cancel-delete-btn"
-          id="cancel-delete-btn"
-        >
-          Cancel
-        </button>
-
-        <button
-          type="button"
-          class="confirm-delete-btn"
-          id="confirm-delete-btn"
-        >
-          Delete Employee
-        </button>
-
-      </div>
-
-    </div>
-
-  </div>
-
-<% } %>
   </main>
+
 
 
   <!-- ========================
