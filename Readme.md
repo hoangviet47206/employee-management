@@ -1,137 +1,200 @@
-# 👥 Employee Management System
+# 👨‍💼 Employee Management System
 
-A simple full-stack Employee Management System built with **Node.js, Express.js, EJS, and MySQL**.
+A full-stack Employee Management web application built with **Node.js, Express, EJS, and MySQL**.
 
-The application allows users to manage employee records through a clean web interface and is deployed online using **Railway**.
+The project provides employee management features with **authentication, role-based authorization, filtering, pagination, and CRUD operations**.
 
 ## 🌐 Live Demo
 
-👉 [View Live Website](https://employee-management-production-7756.up.railway.app/)
+https://employee-management-od9a.onrender.com
 
----
-
-## 📸 Preview
-
-![Employee Management System](./assets/employee-management.png)
+> ⚠️ The application is hosted on Render Free, so the first request after a period of inactivity may take some time to load.
 
 ---
 
 ## ✨ Features
 
-- View employee information
-- Add new employees
-- Edit employee details
-- Delete employees
-- Filter employees by:
-  - First name
-  - Last name
-  - Job title
-- Pagination
-- MySQL database integration
-- Responsive web interface
-- Online deployment with Railway
+### 🔐 Authentication
+
+- ✅ User registration
+- ✅ User login
+- ✅ User logout
+- ✅ Session-based authentication
+- ✅ Password hashing with bcrypt
+
+### 🛡️ Role-Based Authorization
+
+The application supports three user roles:
+
+| Feature | 👤 Employee | 🧑‍💼 Manager | 👑 Admin |
+|---|---:|---:|---:|
+| View employees | ✅ | ✅ | ✅ |
+| Search / Filter | ✅ | ✅ | ✅ |
+| Add employee | ❌ | ✅ | ✅ |
+| Update employee | ❌ | ✅ | ✅ |
+| Delete employee | ❌ | ❌ | ✅ |
+
+Authorization is enforced on both the frontend and backend.
+
+### 📋 Employee Management
+
+- 👀 Display employee list
+- 🔎 Search and filter employees
+- 📄 Pagination
+- ➕ Add new employees
+- ✏️ Update employee information
+- 🗑️ Delete employees
+- 🔄 Handle related database records safely when deleting employees
 
 ---
 
 ## 🛠️ Tech Stack
 
-### Backend
+### ⚙️ Backend
 
 - Node.js
 - Express.js
+- express-session
+- bcrypt
+- mysql2
 
-### Frontend
+### 🎨 Frontend
 
 - EJS
 - HTML
 - CSS
 - JavaScript
 
-### Database
+### 🗄️ Database
 
 - MySQL
 
-### Deployment
+### ☁️ Deployment
 
-- Railway
+- **Application:** Render
+- **Database:** Aiven MySQL
+- **Source Control:** GitHub
 
 ---
 
-## 📂 Project Structure
+## 📁 Project Structure
 
 ```text
 employee-management/
-│
 ├── controllers/
+│   ├── authController.js
 │   └── employeeController.js
+│
+├── middleware/
+│   ├── authMiddleware.js
+│   └── roleMiddleware.js
 │
 ├── models/
 │   ├── pool.js
-│   └── queries.js
+│   ├── queries.js
+│   └── userQueries.js
+│
+├── public/
+│   ├── scripts/
+│   │   └── employee-page.js
+│   └── styles/
+│       ├── auth.css
+│       └── employee-page.css
 │
 ├── routes/
+│   ├── authRouter.js
 │   └── employeeRouter.js
 │
 ├── views/
 │   ├── employee-page.ejs
-│   └── error-page.ejs
-│
-├── public/
-│   ├── styles/
-│   │   └── employee-page.css
-│   └── scripts/
-│       └── employee-page.js
-│
-├── assets/
-│   └── employee-management.png
+│   ├── login.ejs
+│   └── register.ejs
 │
 ├── app.js
 ├── package.json
-├── .gitignore
+├── .env.example
 └── README.md
 ```
 
 ---
 
-## ⚙️ Installation
+## 🗃️ Database
 
-### 1. Clone the repository
+The project uses the MySQL `classicmodels` database with an additional `users` table for authentication and authorization.
+
+Main tables used by the application include:
+
+```text
+employees
+customers
+offices
+users
+```
+
+The `users` table stores:
+
+- 👤 username
+- 📧 email
+- 🔒 hashed password
+- 🛡️ user role
+- 🔗 linked employee ID
+
+Available roles:
+
+```text
+employee
+manager
+admin
+```
+
+---
+
+## 🚀 Installation
+
+### 1️⃣ Clone the repository
 
 ```bash
 git clone https://github.com/hoangviet47206/employee-management.git
 ```
 
-### 2. Go to the project directory
-
 ```bash
 cd employee-management
 ```
 
-### 3. Install dependencies
+### 2️⃣ Install dependencies
 
 ```bash
 npm install
 ```
 
-### 4. Configure environment variables
+### 3️⃣ Configure environment variables
 
-Create a `.env` file in the root directory and configure your database connection.
+Create a `.env` file in the root directory:
 
 ```env
-DB_HOST=your_database_host
-DB_PORT=your_database_port
-DB_USER=your_database_user
-DB_PASSWORD=your_database_password
-DB_NAME=your_database_name
+PORT=8000
+
+DB_HOST=localhost
+DB_PORT=3306
+DB_USER=root
+DB_PASSWORD=your_mysql_password
+DB_NAME=classicmodels
+DB_SSL=false
+
+SESSION_SECRET=your_session_secret
 ```
 
-### 5. Start the application
+> 🔐 Do not commit the `.env` file to GitHub.
+
+---
+
+## ▶️ Run the Application
 
 ```bash
 npm start
 ```
 
-Then open:
+The application will run at:
 
 ```text
 http://localhost:8000
@@ -139,65 +202,82 @@ http://localhost:8000
 
 ---
 
-## 🗄️ Database
-
-The project uses **MySQL** to store and manage employee information.
-
-The application demonstrates common database operations including:
+## ☁️ Deployment Architecture
 
 ```text
-CREATE
-READ
-UPDATE
-DELETE
+        GitHub
+           │
+           ▼
+   Render Web Service
+ Node.js + Express + EJS
+           │
+           ▼
+      Aiven MySQL
+ classicmodels Database
 ```
 
-These operations are handled through the Express backend and MySQL queries.
+Production environment variables are configured directly on Render.
+
+The deployed application connects securely to the Aiven MySQL database using SSL.
 
 ---
 
-## 🚀 Deployment
+## 🔒 Security
 
-The application is deployed using **Railway**.
+The project currently implements several basic security mechanisms:
 
-```text
-User
-  │
-  ▼
-Public Website
-  │
-  ▼
-Node.js + Express
-  │
-  ▼
-MySQL Database
-```
+- 🔑 Password hashing using bcrypt
+- 🍪 Session-based authentication
+- 🚧 Protected routes
+- 🛡️ Role-based authorization middleware
+- 💉 Parameterized SQL queries
+- 🔐 Environment variables for credentials and secrets
+- 🔒 SSL connection to the production database
 
-The source code is hosted on GitHub, while Railway runs the application and database online.
+Users cannot gain additional privileges simply by hiding or modifying frontend elements because authorization is also checked on the backend.
 
 ---
 
-## 🎯 What I Learned
+## 📚 What I Learned
 
 Through this project, I practiced:
 
-- Building a web server with Express.js
-- Using MVC-style project organization
-- Working with EJS templates
-- Connecting Node.js to MySQL
-- Performing CRUD operations
-- Handling forms and HTTP requests
-- Filtering and paginating database records
-- Using environment variables
-- Deploying a Node.js application
-- Connecting a deployed application to a cloud database
+- ⚙️ Building a Node.js and Express web application
+- 🗄️ Working with MySQL using `mysql2`
+- 🔐 Designing authentication workflows
+- 🍪 Implementing session management
+- 🛡️ Implementing Role-Based Access Control
+- 🧩 Writing Express middleware
+- ✏️ Performing CRUD operations
+- 🔄 Using SQL transactions
+- 🏗️ Separating routes, controllers, models, and views
+- 🔧 Managing environment variables
+- ☁️ Deploying a Node.js application
+- 🌐 Connecting a cloud-hosted application to a remote MySQL database
+- 🌿 Using Git and GitHub during development
+
+---
+
+## 🔮 Future Improvements
+
+Possible improvements include:
+
+- 🗂️ Persistent session storage
+- ✅ Form validation
+- ⚠️ Improved error handling
+- 🛡️ CSRF protection
+- 🔒 Security headers
+- 🚦 Rate limiting
+- 📝 Audit logs
+- 📊 Employee activity history
+- 📱 Improved responsive UI
+- 🧪 Automated testing
+- 🌐 Custom domain
 
 ---
 
 ## 👨‍💻 Author
 
-**Nguyễn Hoàng Việt**
+**Nguyen Hoang Viet**
 
-Cybersecurity Student at VNU University of Engineering and Technology (VNU-UET)
-
-GitHub: [@hoangviet47206](https://github.com/hoangviet47206)
+GitHub: [hoangviet47206](https://github.com/hoangviet47206)
