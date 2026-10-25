@@ -1,348 +1,531 @@
-# 👨‍💼 Employee Management System
+# 👥 Employee Management System
 
-A modern full-stack Employee Management web application built with **Node.js, Express, EJS, MySQL, and Docker**.
+A full-stack Employee Management System built with **Node.js, Express.js, EJS, and MySQL**, with a strong focus on **authentication, role-based authorization, audit logging, and security monitoring**.
 
-The project includes **authentication, role-based access control, employee CRUD operations, cloud deployment, Docker support, responsive UI, animated landing page, toast notifications, and custom error pages**.
+<p align="center">
+  <strong>Employee Management • RBAC • Admin Dashboard • Audit Logging • Security</strong>
+</p>
 
 ---
 
 ## 🌐 Live Demo
 
+🔗 **Live Application:**  
 https://employee-management-od9a.onrender.com
 
-> ⚠️ The application is hosted on Render Free, so the first request after a period of inactivity may take some time to load.
+The application is deployed on **Render** and connected to a managed **MySQL database hosted on Aiven**.
 
 ---
 
-## ✨ Overview
+## 📌 Overview
 
-The application is designed as a complete employee management system with a public landing page and a protected management dashboard.
+The **Employee Management System** is a web application designed to manage employee records, application users, permissions, and administrative activity through a centralized interface.
 
-Main application flow:
+The system supports three roles:
 
-```text
-Welcome Page
-     ↓
-Login / Register
-     ↓
-Authentication
-     ↓
-Employee Dashboard
-     ↓
-Role-Based Actions
-```
+- 👤 **Employee**
+- 🧑‍💼 **Manager**
+- 🛡️ **Admin**
 
-Main routes:
+Each role has different permissions based on **Role-Based Access Control (RBAC)**.
 
-```text
-/             → Welcome Page
-/login        → Login
-/register     → Register
-/employees    → Employee Dashboard
-```
+In addition to standard employee CRUD operations, the project includes:
+
+- 🔐 Authentication and persistent sessions
+- 👥 Employee management
+- 🛡️ Role-based authorization
+- 📊 Administrative dashboard
+- ⚙️ User and role management
+- 📝 Security audit logging
+- 🚦 Authentication rate limiting
+- 🪖 HTTP security headers
+- 🧱 Content Security Policy
+- ☁️ Production deployment
 
 ---
 
-## 🚀 Features
+## 📚 Documentation
 
-### 🌐 Welcome Landing Page
+Detailed technical documentation is available in both **English** and **Vietnamese**.
 
-- Modern animated landing page
-- Project overview
-- Technology stack preview
-- Developer introduction
-- Login and Register navigation
-- Dynamic navigation for authenticated users
-- Animated background and dashboard preview
+The documentation provides a deeper explanation of:
 
-### 🔐 Authentication
+- 🏗️ System architecture
+- 🗄️ Database design
+- 🔐 Authentication and session management
+- 🛡️ Role-Based Access Control
+- 👥 Employee management workflow
+- 📊 Admin Dashboard
+- ⚙️ User and role management
+- 📝 Security audit logging
+- 🔒 Security controls
+- ☁️ Production deployment
+- 🧪 Testing and verification
+- 🧩 Development challenges and solutions
+- 🔮 Future improvements
+
+### 📄 Technical Documentation
+
+| Language | Document |
+|---|---|
+| 🇬🇧 English | [Open English Documentation](docs/Document_EN.pdf) |
+| 🇻🇳 Vietnamese | [Open Vietnamese Documentation](docs/Document_VI.pdf) |
+
+> The PDF documents include detailed explanations, screenshots, tables, implementation decisions, testing results, and security-related design notes.
+
+---
+
+# ✨ Features
+
+## 🔐 Authentication
+
+The application provides a complete authentication flow for registered users.
+
+Main authentication features include:
 
 - User registration
 - User login
 - User logout
-- Session-based authentication
-- Password hashing with bcrypt
-- Inline authentication error messages
-- Registration success notification
-
-### 🛡️ Role-Based Access Control
-
-The application supports three roles:
-
-| Feature | 👤 Employee | 🧑‍💼 Manager | 👑 Admin |
-|---|---:|---:|---:|
-| View employees | ✅ | ✅ | ✅ |
-| Search / Filter | ✅ | ✅ | ✅ |
-| Add employee | ❌ | ✅ | ✅ |
-| Update employee | ❌ | ✅ | ✅ |
-| Delete employee | ❌ | ❌ | ✅ |
-
-Authorization is enforced on the **backend**, not only through the interface.
+- Password hashing using **bcrypt**
+- Persistent sessions stored in MySQL
+- Secure session cookies
+- Login rate limiting
+- Registration rate limiting
+- Authentication activity recorded in Audit Logs
 
 ---
 
-## 📋 Employee Management
+## 👥 Employee Management
 
-The dashboard supports:
+Authenticated users can view employee information and use filtering tools to search through employee records.
 
-- 👀 View employees
-- 🔎 Search by first name
-- 🔎 Search by last name
-- 🔎 Filter by job title
+Managers and administrators receive additional management capabilities.
+
+### Available Functions
+
+- 🔎 Search and filter employees
 - 📄 Pagination
 - ➕ Add employees
 - ✏️ Update employee information
 - 🗑️ Delete employees
-- 🔄 Safe handling of related records during deletion
+- ⚠️ Delete confirmation dialog
+- 📝 Audit employee modifications
 
 ---
 
-## 🎨 User Interface
+## 📊 Admin Dashboard
 
-The application includes a redesigned modern dashboard interface.
+Administrators have access to a centralized dashboard that displays live statistics retrieved from the MySQL database.
 
-### UI Features
+### Summary Metrics
 
-- Responsive layout
-- Glass-style cards
-- Animated background
-- Smooth page transitions
-- Hover animations
-- Animated dashboard preview
-- Loading states on buttons
-- Toast notifications
-- Custom delete confirmation modal
-- Responsive mobile layout
-- Consistent visual design across all pages
+- 👥 Total Employees
+- 👤 Total Users
+- 🧑‍💼 Total Managers
+- 🛡️ Total Administrators
+- ❌ Failed Login Attempts
+- 📝 Security Events Today
 
-### 🔔 Toast Notifications
+### Dashboard Charts
 
-Successful actions display notifications such as:
+- 🍩 Users by Role
+- 🏢 Employees by Office
+- 📈 Audit Activity — Last 7 Days
+- 📊 Audit Events by Action
+
+The dashboard also displays recent security events.
+
+Charts are rendered using **Chart.js**.
+
+---
+
+## ⚙️ User Management
+
+Administrators can manage registered application accounts.
+
+Available functions include:
+
+- 👤 View registered users
+- 🔗 View linked employee IDs
+- 🏷️ View current roles
+- 🔄 Change user roles
+- 🛡️ Protect the current administrator from accidental self-demotion
+
+Role modifications are automatically recorded in the audit log.
+
+---
+
+## 📝 Audit Logging
+
+The application records important authentication, employee-management, and administrative events.
+
+### Recorded Events
 
 ```text
-✓ Employee added successfully.
-✓ Employee updated successfully.
-✓ Employee deleted successfully.
+LOGIN_SUCCESS
+LOGIN_FAILED
+LOGOUT
+
+EMPLOYEE_CREATED
+EMPLOYEE_UPDATED
+EMPLOYEE_DELETED
+
+USER_ROLE_UPDATED
 ```
 
-Failed operations display an error toast instead of raw browser messages.
+Each audit event may contain:
+
+- User ID
+- Username
+- Action
+- Target
+- IP address
+- Timestamp
+
+Administrators can review these events through the dedicated **Audit Logs** interface.
 
 ---
 
-## ⚠️ Custom Error Pages
+# 🛡️ Role-Based Access Control
 
-The project includes custom pages for common application errors:
+The application uses **Role-Based Access Control (RBAC)** to restrict features based on the authenticated user's role.
+
+| Feature | 👤 Employee | 🧑‍💼 Manager | 🛡️ Admin |
+|---|:---:|:---:|:---:|
+| View Employees | ✅ | ✅ | ✅ |
+| Search / Filter Employees | ✅ | ✅ | ✅ |
+| Add Employee | ❌ | ✅ | ✅ |
+| Edit Employee | ❌ | ✅ | ✅ |
+| Delete Employee | ❌ | ❌ | ✅ |
+| Admin Dashboard | ❌ | ❌ | ✅ |
+| User Management | ❌ | ❌ | ✅ |
+| Change User Roles | ❌ | ❌ | ✅ |
+| View Audit Logs | ❌ | ❌ | ✅ |
+
+Authorization is enforced on the **server side**, not only by hiding interface elements.
+
+---
+
+# 🧰 Technology Stack
+
+## Backend
+
+- 🟢 Node.js
+- ⚡ Express.js
+
+## Frontend
+
+- 🖥️ EJS
+- 🌐 HTML5
+- 🎨 CSS3
+- 🟨 JavaScript
+- 📊 Chart.js
+
+## Database
+
+- 🐬 MySQL
+
+## Authentication & Session Management
+
+- 🔐 bcrypt
+- 🍪 express-session
+- 💾 express-mysql-session
+
+## Security
+
+- 🪖 Helmet
+- 🧱 Content Security Policy
+- 🚦 express-rate-limit
+- 🛡️ Role-Based Access Control
+- 📝 Audit Logging
+
+## Deployment
+
+- ☁️ Render
+- 🗄️ Aiven MySQL
+
+---
+
+# 🏗️ System Architecture
+
+The application follows an MVC-style separation of responsibilities.
 
 ```text
-403 → Access Denied
-404 → Page Not Found
-500 → Internal Server Error
+                    Browser
+                       │
+                       ▼
+                Express Routes
+                       │
+                       ▼
+                  Middleware
+             Auth / RBAC / Rate Limit
+                       │
+                       ▼
+                  Controllers
+                  /         \
+                 ▼           ▼
+            EJS Views     Models
+                              │
+                              ▼
+                         MySQL Database
 ```
 
-Each error page includes:
+Typical application request flow:
 
-- Consistent application branding
-- Animated background
-- Error description
-- Back to Dashboard button
-- Go Back action
+```text
+Browser Request
+      │
+      ▼
+Express Route
+      │
+      ▼
+Authentication / RBAC Middleware
+      │
+      ▼
+Controller
+      │
+      ▼
+Model / Database Query
+      │
+      ▼
+MySQL
+      │
+      ▼
+EJS Response / Redirect
+```
 
----
-
-## 🛠️ Tech Stack
-
-### ⚙️ Backend
-
-- Node.js
-- Express.js
-- express-session
-- bcrypt
-- mysql2
-
-### 🎨 Frontend
-
-- EJS
-- HTML
-- CSS
-- JavaScript
-
-### 🗄️ Database
-
-- MySQL
-
-### 🐳 Containerization
-
-- Docker
-
-### ☁️ Cloud
-
-- Render
-- Aiven MySQL
-
-### 🌿 Version Control
-
-- Git
-- GitHub
+More detailed architecture information is available in the project documentation.
 
 ---
 
-## 📁 Project Structure
+# 📁 Project Structure
+
+Only the main directories are shown here.
 
 ```text
 employee-management/
-├── controllers/
-│   ├── authController.js
-│   └── employeeController.js
 │
-├── middleware/
-│   ├── authMiddleware.js
-│   └── roleMiddleware.js
+├── controllers/     # Application logic
+├── middleware/      # Authentication, RBAC and rate limiting
+├── models/          # Database connection and MySQL queries
+├── routes/          # Express routes
+├── views/           # EJS templates
+├── public/          # CSS and client-side JavaScript
 │
-├── models/
-│   ├── pool.js
-│   ├── queries.js
-│   └── userQueries.js
+├── docs/
+│   ├── Document_EN.pdf
+│   └── Document_VI.pdf
 │
-├── public/
-│   ├── scripts/
-│   │   └── employee-page.js
-│   │
-│   └── styles/
-│       ├── auth.css
-│       ├── employee-page.css
-│       ├── error-page.css
-│       └── welcome.css
-│
-├── routes/
-│   ├── authRouter.js
-│   └── employeeRouter.js
-│
-├── views/
-│   ├── employee-page.ejs
-│   ├── error-page.ejs
-│   ├── login.ejs
-│   ├── register.ejs
-│   └── welcome.ejs
-│
-├── app.js
-├── Dockerfile
-├── .dockerignore
-├── .env.example
+├── app.js           # Application entry point
 ├── package.json
 └── README.md
 ```
 
+> Detailed descriptions of controllers, routes, database entities, workflows, and implementation decisions are provided in the technical documentation.
+
 ---
 
-## 🗃️ Database
+# 🔒 Security Features
 
-The project uses the MySQL `classicmodels` database with an additional `users` table for authentication and authorization.
+## 🔑 Password Hashing
 
-Important tables include:
+Passwords are never stored in plain text.
+
+The application uses **bcrypt** to hash passwords before they are stored in MySQL.
+
+During authentication, the submitted password is compared with the stored hash.
+
+---
+
+## 🛡️ Server-Side Authorization
+
+Protected routes verify both:
+
+1. Whether the user is authenticated.
+2. Whether the user has the required role.
+
+Example:
 
 ```text
-employees
-customers
-offices
-users
+Employee
+   └── Read
+
+Manager
+   ├── Read
+   ├── Create
+   └── Update
+
+Admin
+   ├── Read
+   ├── Create
+   ├── Update
+   ├── Delete
+   ├── Dashboard
+   ├── User Management
+   └── Audit Logs
 ```
 
-The `users` table stores:
+---
 
-- username
-- email
-- hashed password
-- user role
-- linked employee ID
+## 💾 Persistent Sessions
 
-Available roles:
+The application uses:
 
 ```text
-employee
-manager
-admin
+express-session
+        +
+express-mysql-session
 ```
 
----
+Session data is stored in MySQL instead of application memory.
 
-## 🔒 Security
-
-The project currently includes several security mechanisms:
-
-- 🔑 Password hashing with bcrypt
-- 🍪 Session-based authentication
-- 🚧 Protected routes
-- 🛡️ Role-based authorization middleware
-- 💉 Parameterized SQL queries
-- 🔐 Environment variables for secrets and credentials
-- 🔒 SSL connection to the production MySQL database
-- 🔁 Session regeneration after successful login
-- ⚠️ Custom authorization error handling
-
-The backend independently verifies user roles, so modifying frontend elements does not grant additional privileges.
+This improves persistence across normal server restarts and makes session management more suitable for production deployment.
 
 ---
 
-## 🚀 Installation
+## 🍪 Secure Session Cookies
 
-### 1. Clone the repository
+Session cookies use security-related options including:
+
+- `httpOnly`
+- `sameSite`
+- `secure` in production
+- Session expiration
+
+---
+
+## 🪖 Helmet
+
+**Helmet** is used to configure security-related HTTP headers.
+
+The application also implements a **Content Security Policy (CSP)**.
+
+The policy restricts allowed sources for resources such as:
+
+- JavaScript
+- CSS
+- Fonts
+- Images
+- Network connections
+
+Dashboard JavaScript is stored in a separate static file so that the script policy does not require `unsafe-inline`.
+
+---
+
+## 🚦 Rate Limiting
+
+Authentication endpoints use **express-rate-limit** to reduce automated abuse.
+
+Rate limiting is currently applied to:
+
+- Login
+- Registration
+
+This helps reduce repeated authentication attempts and basic brute-force behavior.
+
+---
+
+## 📝 Security Monitoring
+
+Important application activity is stored in the `audit_logs` table.
+
+Examples include:
+
+```text
+Successful login
+Failed login
+Logout
+Employee creation
+Employee modification
+Employee deletion
+User role modification
+```
+
+Administrators can review security activity from both:
+
+- Admin Dashboard
+- Audit Logs
+
+---
+
+# 📸 Screenshots
+
+## 📊 Admin Dashboard
+
+The Admin Dashboard displays employee, user, role, and security statistics using real database data.
+
+---
+
+## 👥 Employee Management
+
+The Employees page provides filtering, pagination, employee CRUD operations, and role-specific controls.
+
+---
+
+## ⚙️ User Management
+
+Administrators can review application users and manage their roles.
+
+---
+
+## 📝 Audit Logs
+
+The Audit Logs page provides visibility into authentication events and administrative activity.
+
+> Additional screenshots are available in the English and Vietnamese PDF documentation.
+
+---
+
+# 🚀 Installation
+
+## 1. Clone the Repository
 
 ```bash
-git clone https://github.com/hoangviet47206/employee-management.git
+git clone <your-repository-url>
 ```
+
+## 2. Open the Project
 
 ```bash
 cd employee-management
 ```
 
-### 2. Install dependencies
+## 3. Install Dependencies
 
 ```bash
 npm install
 ```
 
-### 3. Configure environment variables
+## 4. Configure Environment Variables
 
-Create a `.env` file:
+Create a `.env` file in the root directory.
+
+Example:
 
 ```env
-PORT=8000
-
-DB_HOST=localhost
+DB_HOST=
 DB_PORT=3306
-DB_USER=root
-DB_PASSWORD=your_mysql_password
-DB_NAME=classicmodels
-DB_SSL=false
+DB_USER=
+DB_PASSWORD=
+DB_NAME=
 
-SESSION_SECRET=your_session_secret
+SESSION_SECRET=
+
+NODE_ENV=development
+PORT=8000
 ```
 
-> 🔐 Never commit `.env` to GitHub.
+> ⚠️ Never commit your real `.env` file, database credentials, passwords, or session secrets to GitHub.
 
----
+Make sure `.env` is included in `.gitignore`.
 
-## ▶️ Run Locally
-
-Start the application:
+## 5. Start the Application
 
 ```bash
 npm start
 ```
 
-Or:
-
-```bash
-node app.js
-```
-
-For development with automatic restart:
-
-```bash
-node --watch app.js
-```
-
-Open:
+The default local address can be:
 
 ```text
 http://localhost:8000
@@ -350,181 +533,163 @@ http://localhost:8000
 
 ---
 
-## 🐳 Docker
+# ⚙️ Environment Variables
 
-The application can also run inside a Docker container.
-
-### Build the Docker image
-
-```bash
-docker build -t employee-management .
-```
-
-### Run the container
-
-```bash
-docker run --env-file .env -p 8000:8000 employee-management
-```
-
-Then open:
-
-```text
-http://localhost:8000
-```
-
-### Docker Workflow
-
-```text
-Source Code
-    ↓
-Dockerfile
-    ↓
-Docker Image
-    ↓
-employee-management
-    ↓
-Docker Container
-    ↓
-Node.js Application
-```
-
-The `.dockerignore` file prevents unnecessary or sensitive files such as `.env`, `node_modules`, and Git metadata from being copied into the image.
+| Variable | Description |
+|---|---|
+| `DB_HOST` | MySQL database host |
+| `DB_PORT` | MySQL database port |
+| `DB_USER` | MySQL username |
+| `DB_PASSWORD` | MySQL password |
+| `DB_NAME` | MySQL database name |
+| `SESSION_SECRET` | Secret used for application sessions |
+| `NODE_ENV` | Application environment |
+| `PORT` | Application server port |
 
 ---
 
-## ☁️ Deployment Architecture
+# 🗺️ Main Routes
 
-```text
-          GitHub
-             │
-             ▼
-     Render Web Service
-   Node.js + Express + EJS
-             │
-             ▼
-        Aiven MySQL
-     classicmodels Database
-```
-
-The application is automatically redeployed by Render after new commits are pushed to GitHub.
-
-Production environment variables are configured directly in Render.
+| Route | Description | Access |
+|---|---|---|
+| `/` | Home Page | Public |
+| `/login` | Login | Public |
+| `/register` | Registration | Public |
+| `/employees` | Employee Management | Authenticated |
+| `/admin/dashboard` | Admin Dashboard | Admin |
+| `/admin/users` | User Management | Admin |
+| `/audit-logs` | Security Audit Logs | Admin |
 
 ---
 
-## 🎭 Application Flow
+# ☁️ Deployment
 
-### Visitor
-
-```text
-/
-↓
-Welcome Page
-↓
-Login / Register
-```
-
-### Authenticated User
+The production application uses the following architecture:
 
 ```text
-Login
-↓
-Session Created
-↓
-/employees
-↓
-Employee Dashboard
+User Browser
+      │
+      ▼
+    Render
+Node.js + Express
+      │
+      ▼
+ Aiven MySQL
 ```
 
-### Logout
+### Live Application
 
-```text
-Employee Dashboard
-↓
-Logout
-↓
-Welcome Page
-```
+🔗 https://employee-management-od9a.onrender.com
+
+The Node.js application is hosted on **Render**, while the production MySQL database is hosted on **Aiven**.
+
+Sensitive configuration values are supplied through environment variables rather than being hard-coded in the repository.
 
 ---
 
-## 📚 What I Learned
+# 🧪 Testing
 
-Through this project, I practiced:
+The application has been manually verified for important functional and security-related workflows, including:
 
-- ⚙️ Building an Express web application
-- 🧱 Structuring routes, controllers, models, middleware, and views
-- 🗄️ Working with MySQL using `mysql2`
-- 🔐 Building authentication workflows
-- 🔑 Hashing passwords with bcrypt
-- 🍪 Managing user sessions
-- 🛡️ Implementing Role-Based Access Control
-- 💉 Writing parameterized SQL queries
-- 🔄 Using SQL transactions
-- ✏️ Building CRUD functionality
-- 🎨 Designing a responsive user interface
-- ✨ Adding CSS and JavaScript animations
-- 🔔 Building toast notifications
-- ⚠️ Designing custom error pages
-- 🐳 Building and running Docker images
-- ☁️ Deploying Node.js applications to Render
-- 🌐 Connecting to Aiven MySQL
-- 🌿 Using Git and GitHub throughout development
+- Valid authentication
+- Invalid authentication
+- Employee access
+- Manager create/update permissions
+- Admin-only employee deletion
+- Admin Dashboard access
+- User role modification
+- Audit event generation
+- Logout
+- Role-based route protection
+- Rate limiting
+- Persistent sessions
 
----
+Detailed testing results are available in the technical documentation:
 
-## 🔮 Future Improvements
-
-Possible future improvements include:
-
-- 🗂️ Persistent production session storage
-- ✅ Advanced server-side validation
-- 🛡️ CSRF protection
-- 🔒 Security headers
-- 🚦 Rate limiting
-- 📝 Audit logging
-- 📊 Employee activity history
-- 🔍 Advanced employee search
-- 📊 Dashboard statistics
-- 🧪 Automated testing
-- 🐳 Docker Compose
-- ⚙️ CI/CD workflow
-- 🌙 Dark mode
-- 🌐 Custom domain
+- 🇬🇧 [English Documentation](docs/Document_EN.pdf)
+- 🇻🇳 [Vietnamese Documentation](docs/Document_VI.pdf)
 
 ---
 
-## 👨‍💻 Developer
+# 🧩 Development Challenges
+
+Several practical issues were addressed during development, including:
+
+- Persistent authentication after deployment
+- Role-specific permissions
+- Security audit logging
+- Dashboard aggregation from real MySQL data
+- Converting office codes into readable office names
+- Content Security Policy conflicts with inline JavaScript
+- Consistent navigation across administrative pages
+- Maintaining stable CRUD behavior while improving security controls
+
+Detailed explanations of these challenges and their solutions are included in the PDF documentation.
+
+---
+
+# 🔮 Future Improvements
+
+Potential future improvements include:
+
+- 🛡️ Complete CSRF protection
+- 🔑 Password reset workflow
+- ✉️ Email verification
+- 🔍 Advanced Audit Log filtering
+- 📅 Audit Log date filtering
+- 📤 Audit Log export
+- 👤 Detailed employee profile pages
+- 📊 Additional dashboard analytics
+- 🧪 Automated unit tests
+- 🧪 Integration tests
+- 🐳 Docker Compose configuration
+- ⚙️ CI/CD pipeline
+- 🔒 Account lockout policy
+- 🔐 Password policy enforcement
+
+---
+
+# 🎓 What I Learned
+
+This project provided practical experience with:
+
+- Full-stack web development using Node.js
+- Express routing and middleware
+- MySQL database integration
+- Authentication and session management
+- Password hashing
+- Role-Based Access Control
+- CRUD operations
+- Security audit logging
+- HTTP security headers
+- Rate limiting
+- Content Security Policy
+- Dashboard data visualization
+- Production deployment
+- Application structure and maintainability
+- Security-focused web application design
+
+---
+
+# 👨‍💻 Author
 
 **Nguyen Hoang Viet**
 
-Network Security student interested in:
+Cybersecurity / Network Security Student
 
-- 🔐 Cybersecurity
-- 🌐 Web Development
-- 🌍 Networking
-- 🐳 Docker
-- 🛡️ Security Engineering
-
-GitHub: [hoangviet47206](https://github.com/hoangviet47206)
+GitHub: **[@hoangviet47206](https://github.com/hoangviet47206)**
 
 ---
 
-## 📌 Project Status
+# 📄 Documentation
 
-```text
-Authentication             ✅
-Role-Based Authorization   ✅
-Employee CRUD              ✅
-Search & Filtering         ✅
-Pagination                 ✅
-Responsive UI              ✅
-Animated Landing Page      ✅
-Toast Notifications        ✅
-Custom Error Pages         ✅
-Docker                     ✅
-Cloud Database             ✅
-Public Deployment          ✅
-```
+For full technical details, implementation notes, screenshots, testing results, and security analysis:
 
-**Status: Active / Portfolio Project**
+| Language | PDF |
+|---|---|
+| 🇬🇧 English | [Document_EN.pdf](docs/Document_EN.pdf) |
+| 🇻🇳 Vietnamese | [Document_VI.pdf](docs/Document_VI.pdf) |
+
+---
+
+⭐ If you find this project useful, feel free to explore the repository, review the documentation, and try the live demo.
