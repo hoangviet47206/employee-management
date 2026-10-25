@@ -6,6 +6,11 @@ const {
   logoutUser,
 } = require("../controllers/authController");
 
+const {
+  loginLimiter,
+  registerLimiter,
+} = require("../middleware/rateLimitMiddleware");
+
 
 const authRouter = Router();
 
@@ -57,10 +62,12 @@ authRouter.get(
 
 // ========================
 // LOGIN
+// RATE LIMITED
 // ========================
 
 authRouter.post(
   "/login",
+  loginLimiter,
   loginUser
 );
 
@@ -90,10 +97,12 @@ authRouter.get(
 
 // ========================
 // REGISTER
+// RATE LIMITED
 // ========================
 
 authRouter.post(
   "/register",
+  registerLimiter,
   registerUser
 );
 

@@ -1503,6 +1503,18 @@ table tbody tr:last-child td {
 
 @media (max-width: 700px) {
 
+  .admin-users-btn,
+  .audit-logs-btn {
+    padding: 8px 10px;
+    font-size: 10px;
+  }
+
+  .admin-users-btn::before,
+  .audit-logs-icon {
+    display: none;
+  }
+
+
   body {
     padding:
       12px;
@@ -2161,4 +2173,339 @@ button.loading {
     width: 100%;
   }
 
+}
+
+@media (max-width: 520px) {
+
+  .topbar {
+    align-items: flex-start;
+  }
+
+  .topbar-right {
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 8px;
+  }
+
+  .admin-users-btn,
+  .audit-logs-btn {
+    order: 1;
+  }
+
+  .user-card,
+  .topbar-right form {
+    order: 2;
+  }
+}
+/* ========================
+   UNIFIED TOPBAR
+======================== */
+
+body {
+  padding: 0;
+}
+
+
+.topbar {
+  width: 100%;
+
+  max-width: none;
+
+  min-height: 78px;
+
+  margin: 0;
+
+  padding:
+    14px
+    clamp(
+      20px,
+      4vw,
+      62px
+    );
+
+  border: none;
+
+  border-bottom:
+    1px solid
+    rgba(
+      148,
+      163,
+      184,
+      0.22
+    );
+
+  border-radius: 0;
+
+  background:
+    rgba(
+      255,
+      255,
+      255,
+      0.8
+    );
+
+  backdrop-filter:
+    blur(18px);
+
+  box-shadow: none;
+
+  position: sticky;
+
+  top: 0;
+
+  z-index: 30;
+}
+
+
+.topbar-left {
+  flex-shrink: 0;
+}
+
+
+.brand-mark {
+  width: 43px;
+  height: 43px;
+
+  border-radius: 13px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #6366f1,
+      #7c3aed
+    );
+
+  font-size: 13px;
+
+  box-shadow:
+    0 10px 24px
+    rgba(
+      79,
+      70,
+      229,
+      0.22
+    );
+}
+
+
+.topbar-eyebrow {
+  color: #94a3b8;
+
+  font-size: 9px;
+
+  letter-spacing: 0.1em;
+}
+
+
+.topbar-title {
+  margin-top: 2px;
+
+  font-size: 15px;
+}
+
+
+.topbar-right {
+  gap: 13px;
+
+  flex-shrink: 0;
+}
+
+
+.user-card {
+  gap: 9px;
+
+  padding-right: 0;
+
+  border-right: none;
+}
+
+
+.avatar {
+  width: 37px;
+  height: 37px;
+
+  color: #ffffff;
+
+  background:
+    linear-gradient(
+      135deg,
+      #0ea5e9,
+      #4f46e5
+    );
+
+  font-size: 12px;
+}
+
+
+.user-meta {
+  gap: 2px;
+}
+
+
+.user-meta strong {
+  font-size: 12px;
+}
+
+
+.role-badge {
+  padding: 0;
+
+  border: none;
+
+  background: transparent;
+
+  color:
+    var(--primary);
+
+  font-size: 9px;
+
+  letter-spacing: 0.08em;
+}
+
+
+.logout-btn {
+  padding:
+    9px
+    13px;
+
+  border:
+    1px solid
+    rgba(
+      148,
+      163,
+      184,
+      0.22
+    );
+
+  border-radius: 9px;
+
+  background: #ffffff;
+
+  color: #475569;
+
+  font-size: 11px;
+
+  font-weight: 700;
+}
+
+
+.logout-btn:hover {
+  background: #f8fafc;
+
+  color: #475569;
+
+  box-shadow:
+    0 6px 16px
+    rgba(
+      15,
+      23,
+      42,
+      0.08
+    );
+}
+
+
+/* Main page spacing after removing body padding */
+
+.container {
+  width:
+    min(
+      1600px,
+      calc(
+        100% - 40px
+      )
+    );
+
+  margin:
+    20px auto
+    0;
+}
+
+
+/* ========================
+   TOPBAR RESPONSIVE
+======================== */
+
+@media (
+  max-width: 1100px
+) {
+
+  .topbar {
+    flex-wrap: wrap;
+  }
+
+}
+
+
+@media (
+  max-width: 700px
+) {
+
+  body {
+    padding: 0;
+  }
+
+
+  .topbar {
+    padding:
+      12px
+      15px;
+  }
+
+
+  .topbar-eyebrow {
+    display: block;
+  }
+
+
+  .user-card {
+    padding-right: 0;
+  }
+
+}
+
+
+@media (
+  max-width: 650px
+) {
+
+  .user-meta {
+    display: none;
+  }
+
+
+  .topbar-left > div:last-child {
+    display: none;
+  }
+
+
+  .container {
+    width:
+      calc(
+        100% - 24px
+      );
+
+    margin-top: 12px;
+  }
+
+}
+.topbar {
+  display: grid;
+
+  grid-template-columns:
+    auto
+    1fr
+    auto;
+
+  align-items: center;
+}
+
+
+.admin-nav {
+  justify-self: center;
+}
+
+
+.topbar-right {
+  justify-self: end;
 }

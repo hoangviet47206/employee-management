@@ -6,13 +6,45 @@ const {
   createUser,
 } = require("../models/userQueries");
 
+const {
+  createAuditLog,
+} = require("../models/auditQueries");
+
+
+// ========================
+// SAFE AUDIT LOG
+// Log lỗi không được làm hỏng
+// chức năng chính của app
+// ========================
+
+async function writeAuditLog(data) {
+  try {
+
+    await createAuditLog(
+      data
+    );
+
+  } catch (error) {
+
+    console.error(
+      "Audit log error:",
+      error
+    );
+
+  }
+}
+
 
 // ========================
 // REGISTER
 // ========================
 
-async function registerUser(req, res) {
+async function registerUser(
+  req,
+  res
+) {
   try {
+
     const {
       username,
       email,
@@ -144,18 +176,44 @@ async function registerUser(req, res) {
 // LOGIN
 // ========================
 
-async function loginUser(req, res) {
+async function loginUser(
+  req,
+  res
+) {
   try {
+
     const {
       username,
       password,
     } = req.body;
 
 
+    // ========================
+    // MISSING CREDENTIALS
+    // ========================
+
     if (
       !username ||
       !password
     ) {
+
+      await writeAuditLog({
+        userId: null,
+
+        username:
+          username || null,
+
+        action:
+          "LOGIN_FAILED",
+
+        target:
+          "Missing login credentials",
+
+        ipAddress:
+          req.ip,
+      });
+
+
       return res
         .status(400)
         .render(
@@ -174,13 +232,38 @@ async function loginUser(req, res) {
     }
 
 
+    // ========================
+    // FIND USER
+    // ========================
+
     const user =
       await findUserByUsername(
         username
       );
 
 
+    // ========================
+    // USER NOT FOUND
+    // ========================
+
     if (!user) {
+
+      await writeAuditLog({
+        userId: null,
+
+        username,
+
+        action:
+          "LOGIN_FAILED",
+
+        target:
+          "Invalid credentials",
+
+        ipAddress:
+          req.ip,
+      });
+
+
       return res
         .status(401)
         .render(
@@ -197,6 +280,10 @@ async function loginUser(req, res) {
         );
     }
 
+
+    // ========================
+    // CHECK PASSWORD
+    // ========================
 
     const passwordMatch =
       await bcrypt.compare(
@@ -205,7 +292,30 @@ async function loginUser(req, res) {
       );
 
 
+    // ========================
+    // WRONG PASSWORD
+    // ========================
+
     if (!passwordMatch) {
+
+      await writeAuditLog({
+        userId:
+          user.id,
+
+        username:
+          user.username,
+
+        action:
+          "LOGIN_FAILED",
+
+        target:
+          "Invalid credentials",
+
+        ipAddress:
+          req.ip,
+      });
+
+
       return res
         .status(401)
         .render(
@@ -223,8 +333,12 @@ async function loginUser(req, res) {
     }
 
 
+    // ========================
+    // REGENERATE SESSION
+    // ========================
+
     req.session.regenerate(
-      (error) => {
+      async (error) => {
 
         if (error) {
 
@@ -266,6 +380,28 @@ async function loginUser(req, res) {
         };
 
 
+        // ========================
+        // LOGIN SUCCESS LOG
+        // ========================
+
+        await writeAuditLog({
+          userId:
+            user.id,
+
+          username:
+            user.username,
+
+          action:
+            "LOGIN_SUCCESS",
+
+          target:
+            "Authentication",
+
+          ipAddress:
+            req.ip,
+        });
+
+
         return res.redirect(
           "/employees"
         );
@@ -303,7 +439,40 @@ async function loginUser(req, res) {
 // LOGOUT
 // ========================
 
-function logoutUser(req, res) {
+async function logoutUser(
+  req,
+  res
+) {
+
+  const currentUser =
+    req.session.user;
+
+
+  // ========================
+  // LOG BEFORE SESSION DELETE
+  // ========================
+
+  if (currentUser) {
+
+    await writeAuditLog({
+      userId:
+        currentUser.id,
+
+      username:
+        currentUser.username,
+
+      action:
+        "LOGOUT",
+
+      target:
+        "Authentication",
+
+      ipAddress:
+        req.ip,
+    });
+
+  }
+
 
   req.session.destroy(
     (error) => {
@@ -321,7 +490,8 @@ function logoutUser(req, res) {
           .render(
             "error-page",
             {
-              statusCode: 500,
+              statusCode:
+                500,
 
               title:
                 "Logout Failed",
@@ -334,7 +504,7 @@ function logoutUser(req, res) {
 
 
       res.clearCookie(
-        "connect.sid"
+        "employee.sid"
       );
 
 

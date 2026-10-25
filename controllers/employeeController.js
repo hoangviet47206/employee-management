@@ -1,134 +1,179 @@
-const db = require("../models/queries");
+const db =
+  require("../models/queries");
+
+const {
+  createAuditLog,
+} = require("../models/auditQueries");
+
+
+// ========================
+// SAFE AUDIT LOG
+// ========================
+
+async function writeAuditLog(
+  data
+) {
+  try {
+
+    await createAuditLog(
+      data
+    );
+
+  } catch (error) {
+
+    console.error(
+      "Audit log error:",
+      error
+    );
+
+  }
+}
 
 
 // ========================
 // RENDER EMPLOYEE PAGE
 // ========================
 
-const renderEmployee = async (req, res) => {
-  try {
-    const page =
-      parseInt(
-        req.query.page,
-        10
-      ) || 1;
+const renderEmployee =
+  async (req, res) => {
+
+    try {
+
+      const page =
+        parseInt(
+          req.query.page,
+          10
+        ) || 1;
 
 
-    const filters = {
-      employeeNumber:
-        req.query.employeeNumber || "",
+      const filters = {
 
-      lastName:
-        req.query.lastName || "",
+        employeeNumber:
+          req.query.employeeNumber ||
+          "",
 
-      firstName:
-        req.query.firstName || "",
+        lastName:
+          req.query.lastName ||
+          "",
 
-      extension:
-        req.query.extension || "",
+        firstName:
+          req.query.firstName ||
+          "",
 
-      email:
-        req.query.email || "",
+        extension:
+          req.query.extension ||
+          "",
 
-      officeCode:
-        req.query.officeCode || "",
+        email:
+          req.query.email ||
+          "",
 
-      reportsTo:
-        req.query.reportsTo || "",
+        officeCode:
+          req.query.officeCode ||
+          "",
 
-      jobTitle:
-        req.query.jobTitle || "",
-    };
+        reportsTo:
+          req.query.reportsTo ||
+          "",
 
-
-    const isFiltering =
-      Object.values(
-        filters
-      ).some(
-        (value) => value
-      );
-
-
-    let employees;
-    let totalItems;
+        jobTitle:
+          req.query.jobTitle ||
+          "",
+      };
 
 
-    if (isFiltering) {
-
-      employees =
-        await db.getEmployees(
-          page,
+      const isFiltering =
+        Object.values(
           filters
+        ).some(
+          (value) =>
+            value
         );
 
 
-      totalItems =
-        await db.getEmployeeCount(
-          filters
-        );
+      let employees;
 
-    } else {
-
-      employees =
-        await db.getEmployees(
-          page
-        );
+      let totalItems;
 
 
-      totalItems =
-        await db.getEmployeeCount();
+      if (isFiltering) {
 
-    }
-
-
-    const totalPages =
-      Math.ceil(
-        totalItems /
-        db.PAGE_SIZE
-      );
+        employees =
+          await db.getEmployees(
+            page,
+            filters
+          );
 
 
-    return res.render(
-      "employee-page",
-      {
-        employees,
+        totalItems =
+          await db.getEmployeeCount(
+            filters
+          );
 
-        totalEmployees:
-          totalItems,
+      } else {
 
-        currentpage:
-          page,
+        employees =
+          await db.getEmployees(
+            page
+          );
 
-        totalPages,
 
-        filters,
+        totalItems =
+          await db.getEmployeeCount();
+
       }
-    );
-
-  } catch (error) {
-
-    console.error(
-      "Render employee error:",
-      error
-    );
 
 
-    return res
-      .status(500)
-      .render(
-        "error-page",
+      const totalPages =
+        Math.ceil(
+          totalItems /
+          db.PAGE_SIZE
+        );
+
+
+      return res.render(
+        "employee-page",
         {
-          statusCode: 500,
+          employees,
 
-          title:
-            "Unable to Load Employees",
+          totalEmployees:
+            totalItems,
 
-          message:
-            "The employee list could not be loaded. Please try again.",
+          currentpage:
+            page,
+
+          totalPages,
+
+          filters,
         }
       );
-  }
-};
+
+    } catch (error) {
+
+      console.error(
+        "Render employee error:",
+        error
+      );
+
+
+      return res
+        .status(500)
+        .render(
+          "error-page",
+          {
+            statusCode:
+              500,
+
+            title:
+              "Unable to Load Employees",
+
+            message:
+              "The employee list could not be loaded. Please try again.",
+          }
+        );
+
+    }
+  };
 
 
 // ========================
@@ -184,6 +229,7 @@ const addEmployee =
 
 
     // Employee Number
+
     if (
       !employeeNumber ||
       !validateNumber(
@@ -196,7 +242,8 @@ const addEmployee =
         .render(
           "error-page",
           {
-            statusCode: 400,
+            statusCode:
+              400,
 
             title:
               "Invalid Employee",
@@ -205,10 +252,12 @@ const addEmployee =
               "Employee number is invalid.",
           }
         );
+
     }
 
 
     // Last Name
+
     if (
       !lastName ||
       lastName.length > 50
@@ -219,7 +268,8 @@ const addEmployee =
         .render(
           "error-page",
           {
-            statusCode: 400,
+            statusCode:
+              400,
 
             title:
               "Invalid Employee",
@@ -228,10 +278,12 @@ const addEmployee =
               "Last name is invalid.",
           }
         );
+
     }
 
 
     // First Name
+
     if (
       !firstName ||
       firstName.length > 50
@@ -242,7 +294,8 @@ const addEmployee =
         .render(
           "error-page",
           {
-            statusCode: 400,
+            statusCode:
+              400,
 
             title:
               "Invalid Employee",
@@ -251,10 +304,12 @@ const addEmployee =
               "First name is invalid.",
           }
         );
+
     }
 
 
     // Job Title
+
     if (
       !jobTitle ||
       jobTitle.length > 50
@@ -265,7 +320,8 @@ const addEmployee =
         .render(
           "error-page",
           {
-            statusCode: 400,
+            statusCode:
+              400,
 
             title:
               "Invalid Employee",
@@ -274,10 +330,12 @@ const addEmployee =
               "Job title is invalid.",
           }
         );
+
     }
 
 
     // Email
+
     if (
       !email ||
       !validateEmail(
@@ -290,7 +348,8 @@ const addEmployee =
         .render(
           "error-page",
           {
-            statusCode: 400,
+            statusCode:
+              400,
 
             title:
               "Invalid Email",
@@ -299,10 +358,12 @@ const addEmployee =
               "Please enter a valid email address.",
           }
         );
+
     }
 
 
     // Extension
+
     if (
       extension &&
       extension.length > 10
@@ -313,7 +374,8 @@ const addEmployee =
         .render(
           "error-page",
           {
-            statusCode: 400,
+            statusCode:
+              400,
 
             title:
               "Invalid Extension",
@@ -322,10 +384,12 @@ const addEmployee =
               "Extension is too long.",
           }
         );
+
     }
 
 
     // Office Code
+
     if (
       officeCode &&
       officeCode.length > 10
@@ -336,7 +400,8 @@ const addEmployee =
         .render(
           "error-page",
           {
-            statusCode: 400,
+            statusCode:
+              400,
 
             title:
               "Invalid Office Code",
@@ -345,10 +410,12 @@ const addEmployee =
               "Office code is too long.",
           }
         );
+
     }
 
 
     // Reports To
+
     if (
       reportsTo &&
       !validateNumber(
@@ -361,7 +428,8 @@ const addEmployee =
         .render(
           "error-page",
           {
-            statusCode: 400,
+            statusCode:
+              400,
 
             title:
               "Invalid Manager",
@@ -370,6 +438,7 @@ const addEmployee =
               "Reports To must be a valid employee number.",
           }
         );
+
     }
 
 
@@ -402,6 +471,36 @@ const addEmployee =
       });
 
 
+      // ========================
+      // AUDIT: CREATE
+      // ========================
+
+      const currentUser =
+        req.session.user;
+
+
+      await writeAuditLog({
+        userId:
+          currentUser
+            ? currentUser.id
+            : null,
+
+        username:
+          currentUser
+            ? currentUser.username
+            : null,
+
+        action:
+          "EMPLOYEE_CREATED",
+
+        target:
+          `employee:${employeeNumber}`,
+
+        ipAddress:
+          req.ip,
+      });
+
+
       return res.redirect(
         "/employees"
       );
@@ -419,7 +518,8 @@ const addEmployee =
         .render(
           "error-page",
           {
-            statusCode: 500,
+            statusCode:
+              500,
 
             title:
               "Unable to Add Employee",
@@ -429,6 +529,7 @@ const addEmployee =
               "The employee could not be added.",
           }
         );
+
     }
   };
 
@@ -456,7 +557,8 @@ const updateEmployee =
         .render(
           "error-page",
           {
-            statusCode: 400,
+            statusCode:
+              400,
 
             title:
               "Invalid Employee",
@@ -465,6 +567,7 @@ const updateEmployee =
               "Employee number is invalid.",
           }
         );
+
     }
 
 
@@ -489,7 +592,8 @@ const updateEmployee =
         .render(
           "error-page",
           {
-            statusCode: 400,
+            statusCode:
+              400,
 
             title:
               "Invalid Last Name",
@@ -498,6 +602,7 @@ const updateEmployee =
               "Last name is too long.",
           }
         );
+
     }
 
 
@@ -511,7 +616,8 @@ const updateEmployee =
         .render(
           "error-page",
           {
-            statusCode: 400,
+            statusCode:
+              400,
 
             title:
               "Invalid First Name",
@@ -520,6 +626,7 @@ const updateEmployee =
               "First name is too long.",
           }
         );
+
     }
 
 
@@ -533,7 +640,8 @@ const updateEmployee =
         .render(
           "error-page",
           {
-            statusCode: 400,
+            statusCode:
+              400,
 
             title:
               "Invalid Job Title",
@@ -542,6 +650,7 @@ const updateEmployee =
               "Job title is too long.",
           }
         );
+
     }
 
 
@@ -557,7 +666,8 @@ const updateEmployee =
         .render(
           "error-page",
           {
-            statusCode: 400,
+            statusCode:
+              400,
 
             title:
               "Invalid Email",
@@ -566,6 +676,7 @@ const updateEmployee =
               "Please enter a valid email address.",
           }
         );
+
     }
 
 
@@ -579,7 +690,8 @@ const updateEmployee =
         .render(
           "error-page",
           {
-            statusCode: 400,
+            statusCode:
+              400,
 
             title:
               "Invalid Extension",
@@ -588,6 +700,7 @@ const updateEmployee =
               "Extension is too long.",
           }
         );
+
     }
 
 
@@ -601,7 +714,8 @@ const updateEmployee =
         .render(
           "error-page",
           {
-            statusCode: 400,
+            statusCode:
+              400,
 
             title:
               "Invalid Office Code",
@@ -610,6 +724,7 @@ const updateEmployee =
               "Office code is too long.",
           }
         );
+
     }
 
 
@@ -625,7 +740,8 @@ const updateEmployee =
         .render(
           "error-page",
           {
-            statusCode: 400,
+            statusCode:
+              400,
 
             title:
               "Invalid Manager",
@@ -634,6 +750,7 @@ const updateEmployee =
               "Reports To must be a valid employee number.",
           }
         );
+
     }
 
 
@@ -668,6 +785,36 @@ const updateEmployee =
       );
 
 
+      // ========================
+      // AUDIT: UPDATE
+      // ========================
+
+      const currentUser =
+        req.session.user;
+
+
+      await writeAuditLog({
+        userId:
+          currentUser
+            ? currentUser.id
+            : null,
+
+        username:
+          currentUser
+            ? currentUser.username
+            : null,
+
+        action:
+          "EMPLOYEE_UPDATED",
+
+        target:
+          `employee:${employeeNumber}`,
+
+        ipAddress:
+          req.ip,
+      });
+
+
       return res.redirect(
         "/employees"
       );
@@ -685,7 +832,8 @@ const updateEmployee =
         .render(
           "error-page",
           {
-            statusCode: 500,
+            statusCode:
+              500,
 
             title:
               "Unable to Update Employee",
@@ -695,6 +843,7 @@ const updateEmployee =
               "The employee could not be updated.",
           }
         );
+
     }
   };
 
@@ -722,7 +871,8 @@ const deleteEmployee =
         .render(
           "error-page",
           {
-            statusCode: 400,
+            statusCode:
+              400,
 
             title:
               "Invalid Employee",
@@ -731,6 +881,7 @@ const deleteEmployee =
               "Employee number is invalid.",
           }
         );
+
     }
 
 
@@ -739,6 +890,36 @@ const deleteEmployee =
       await db.deleteEmployee(
         employeeNumber
       );
+
+
+      // ========================
+      // AUDIT: DELETE
+      // ========================
+
+      const currentUser =
+        req.session.user;
+
+
+      await writeAuditLog({
+        userId:
+          currentUser
+            ? currentUser.id
+            : null,
+
+        username:
+          currentUser
+            ? currentUser.username
+            : null,
+
+        action:
+          "EMPLOYEE_DELETED",
+
+        target:
+          `employee:${employeeNumber}`,
+
+        ipAddress:
+          req.ip,
+      });
 
 
       return res.redirect(
@@ -758,7 +939,8 @@ const deleteEmployee =
         .render(
           "error-page",
           {
-            statusCode: 500,
+            statusCode:
+              500,
 
             title:
               "Unable to Delete Employee",
@@ -768,6 +950,7 @@ const deleteEmployee =
               "The employee could not be deleted.",
           }
         );
+
     }
   };
 

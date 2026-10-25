@@ -1,62 +1,219 @@
-const dotenv = require("dotenv");
-const express = require("express");
-const session = require("express-session");
-const path = require("node:path");
 
-const employeeRouter = require("./routes/employeeRouter");
-const authRouter = require("./routes/authRouter");
+const dotenv =
+  require("dotenv");
+
+const express =
+  require("express");
+
+const session =
+  require("express-session");
+
+const helmet =
+  require("helmet");
+
+const MySQLStoreFactory =
+  require("express-mysql-session");
+
+const path =
+  require("node:path");
+
+
+// ========================
+// ROUTERS
+// ========================
+
+const employeeRouter =
+  require("./routes/employeeRouter");
+
+const authRouter =
+  require("./routes/authRouter");
+
+const auditRouter =
+  require("./routes/auditRouter");
+
+const userAdminRouter =
+  require("./routes/userAdminRouter");
+
+const adminDashboardRouter =
+  require("./routes/adminDashboardRouter");
+
+
+// ========================
+// ENVIRONMENT
+// ========================
 
 dotenv.config();
 
-const app = express();
+
+// ========================
+// APP
+// ========================
+
+const app =
+  express();
 
 const PORT =
-  process.env.PORT || 8000;
+  process.env.PORT ||
+  8000;
+
+const isProduction =
+  process.env.NODE_ENV ===
+  "production";
 
 
-/* ========================
-   VIEW ENGINE
-======================== */
+// ========================
+// TRUST PROXY
+// RENDER / PRODUCTION
+// ========================
 
-app.set(
-  "views",
-  path.join(__dirname, "views")
-);
+if (isProduction) {
+
+  app.set(
+    "trust proxy",
+    1
+  );
+
+}
+
+
+// ========================
+// VIEW ENGINE
+// ========================
 
 app.set(
   "view engine",
   "ejs"
 );
 
-
-/* ========================
-   RENDER PROXY
-======================== */
-
-if (
-  process.env.NODE_ENV ===
-  "production"
-) {
-  app.set(
-    "trust proxy",
-    1
-  );
-}
+app.set(
+  "views",
+  path.join(
+    __dirname,
+    "views"
+  )
+);
 
 
-/* ========================
-   MIDDLEWARE
-======================== */
+// ========================
+// HELMET
+// ========================
 
 app.use(
-  express.json()
+  helmet({
+    contentSecurityPolicy: {
+
+      directives: {
+
+        // Mặc định chỉ cho phép
+        // tài nguyên từ chính website.
+        defaultSrc: [
+          "'self'",
+        ],
+
+
+        // JavaScript:
+        // - file JS trong /public
+        // - Chart.js từ jsDelivr
+        //
+        // Không còn unsafe-inline.
+        scriptSrc: [
+          "'self'",
+          "https://cdn.jsdelivr.net",
+        ],
+
+
+        // CSS:
+        // - CSS local
+        // - Google Fonts
+        //
+        // Giữ unsafe-inline cho style
+        // để tránh làm hỏng những view
+        // hiện tại nếu còn inline style.
+        styleSrc: [
+          "'self'",
+          "'unsafe-inline'",
+          "https://fonts.googleapis.com",
+        ],
+
+
+        // Font từ Google Fonts.
+        fontSrc: [
+          "'self'",
+          "https://fonts.gstatic.com",
+        ],
+
+
+        // Ảnh local hoặc data URI.
+        imgSrc: [
+          "'self'",
+          "data:",
+        ],
+
+
+        // AJAX / fetch chỉ được
+        // gọi về chính website.
+        connectSrc: [
+          "'self'",
+        ],
+
+
+        // Không cho nhúng object,
+        // Flash hoặc plugin.
+        objectSrc: [
+          "'none'",
+        ],
+
+
+        // Base URL chỉ từ website.
+        baseUri: [
+          "'self'",
+        ],
+
+
+        // Form chỉ submit về
+        // chính ứng dụng.
+        formAction: [
+          "'self'",
+        ],
+
+
+        // Ngăn website khác
+        // nhúng app bằng iframe.
+        frameAncestors: [
+          "'self'",
+        ],
+
+
+        // Production dùng HTTPS.
+        // Localhost không ép upgrade.
+        upgradeInsecureRequests:
+          isProduction
+            ? []
+            : null,
+      },
+    },
+  })
 );
+
+
+// ========================
+// BODY PARSERS
+// ========================
 
 app.use(
   express.urlencoded({
     extended: true,
   })
 );
+
+app.use(
+  express.json()
+);
+
+
+// ========================
+// STATIC FILES
+// ========================
 
 app.use(
   express.static(
@@ -68,28 +225,95 @@ app.use(
 );
 
 
-/* ========================
-   SESSION
-======================== */
+// ========================
+// MYSQL SESSION STORE
+// ========================
+
+const MySQLStore =
+  MySQLStoreFactory(
+    session
+  );
+
+
+const sessionStore =
+  new MySQLStore({
+
+    host:
+      process.env.DB_HOST,
+
+    port:
+      Number(
+        process.env.DB_PORT
+      ) || 3306,
+
+    user:
+      process.env.DB_USER,
+
+    password:
+      process.env.DB_PASSWORD,
+
+    database:
+      process.env.DB_NAME,
+
+    createDatabaseTable:
+      true,
+
+
+    schema: {
+
+      tableName:
+        "sessions",
+
+      columnNames: {
+
+        session_id:
+          "session_id",
+
+        expires:
+          "expires",
+
+        data:
+          "data",
+      },
+    },
+  });
+
+
+// ========================
+// SESSION
+// ========================
 
 app.use(
   session({
+
+    name:
+      "employee.sid",
+
     secret:
-      process.env.SESSION_SECRET ||
+      process.env
+        .SESSION_SECRET ||
       "dev-secret-key",
 
-    resave: false,
+    store:
+      sessionStore,
 
-    saveUninitialized: false,
+    resave:
+      false,
+
+    saveUninitialized:
+      false,
+
 
     cookie: {
-      httpOnly: true,
 
-      sameSite: "lax",
+      httpOnly:
+        true,
+
+      sameSite:
+        "lax",
 
       secure:
-        process.env.NODE_ENV ===
-        "production",
+        isProduction,
 
       maxAge:
         1000 *
@@ -100,12 +324,16 @@ app.use(
 );
 
 
-/* ========================
-   GLOBAL USER
-======================== */
+// ========================
+// GLOBAL CURRENT USER
+// ========================
 
 app.use(
-  (req, res, next) => {
+  (
+    req,
+    res,
+    next
+  ) => {
 
     res.locals.currentUser =
       req.session.user ||
@@ -116,14 +344,15 @@ app.use(
 );
 
 
-/* ========================
-   ROUTES
-======================== */
+// ========================
+// ROUTES
+// ========================
 
 app.use(
   "/",
   authRouter
 );
+
 
 app.use(
   "/",
@@ -131,34 +360,57 @@ app.use(
 );
 
 
-/* ========================
-   404 PAGE
-======================== */
+app.use(
+  "/",
+  adminDashboardRouter
+);
+
 
 app.use(
-  (req, res) => {
+  "/",
+  userAdminRouter
+);
 
+
+app.use(
+  "/",
+  auditRouter
+);
+
+
+// ========================
+// 404
+// ========================
+
+app.use(
+  (
+    req,
     res
+  ) => {
+
+    return res
       .status(404)
       .render(
         "error-page",
         {
-          statusCode: 404,
+
+          statusCode:
+            404,
 
           title:
             "Page Not Found",
 
           message:
-            "The page you are looking for does not exist or may have been moved.",
+            "The page you are looking for does not exist.",
         }
       );
   }
 );
 
 
-/* ========================
-   GLOBAL ERROR HANDLER
-======================== */
+// ========================
+// GLOBAL ERROR HANDLER
+// ========================
 
 app.use(
   (
@@ -168,53 +420,87 @@ app.use(
     next
   ) => {
 
-    console.error(error);
+    console.error(
+      "Application error:",
+      error
+    );
 
-    if (
-      res.headersSent
-    ) {
-      return next(error);
-    }
 
     const statusCode =
-      error.statusCode ||
       error.status ||
+      error.statusCode ||
       500;
 
+
     let title =
-      "Something Went Wrong";
+      "Internal Server Error";
 
     let message =
-      "An unexpected error occurred. Please try again later.";
+      "Something went wrong. Please try again.";
 
+
+    // ========================
+    // 403
+    // ========================
 
     if (
-      statusCode === 403
+      statusCode ===
+      403
     ) {
+
       title =
         "Access Denied";
 
       message =
-        "You do not have permission to access this resource.";
+        "You do not have permission to access this page.";
+
     }
 
 
-    if (
-      statusCode === 404
+    // ========================
+    // 404
+    // ========================
+
+    else if (
+      statusCode ===
+      404
     ) {
+
       title =
         "Page Not Found";
 
       message =
-        "The page you are looking for could not be found.";
+        "The requested page could not be found.";
+
     }
 
 
-    res
-      .status(statusCode)
+    // ========================
+    // 429
+    // ========================
+
+    else if (
+      statusCode ===
+      429
+    ) {
+
+      title =
+        "Too Many Requests";
+
+      message =
+        "Too many requests. Please try again later.";
+
+    }
+
+
+    return res
+      .status(
+        statusCode
+      )
       .render(
         "error-page",
         {
+
           statusCode,
           title,
           message,
@@ -224,20 +510,17 @@ app.use(
 );
 
 
-/* ========================
-   START SERVER
-======================== */
+// ========================
+// START SERVER
+// ========================
 
 app.listen(
   PORT,
-  (error) => {
-
-    if (error) {
-      throw error;
-    }
+  () => {
 
     console.log(
-      `Listening on port ${PORT}`
+      `Server running on http://localhost:${PORT}`
     );
+
   }
 );

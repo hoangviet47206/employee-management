@@ -1,5 +1,5 @@
-<!DOCTYPE html>
 
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -32,6 +32,11 @@
     rel="stylesheet"
     href="/styles/employee-page.css"
   >
+
+  <link
+    rel="stylesheet"
+    href="/styles/admin-navigation.css"
+  >
 </head>
 
 
@@ -42,6 +47,8 @@
   ========================= -->
 
   <header class="topbar">
+
+    <!-- LEFT -->
 
     <div class="topbar-left">
 
@@ -56,7 +63,7 @@
         </p>
 
         <h2 class="topbar-title">
-          Dashboard
+          Employees
         </h2>
 
       </div>
@@ -64,12 +71,62 @@
     </div>
 
 
+    <!-- ========================
+         ADMIN NAVIGATION
+    ========================= -->
+
+    <% if (
+      currentUser.role === "admin"
+    ) { %>
+
+      <nav class="admin-nav">
+
+        <a
+          href="/admin/dashboard"
+          class="admin-nav-link"
+        >
+          Dashboard
+        </a>
+
+        <a
+          href="/employees"
+          class="admin-nav-link active"
+        >
+          Employees
+        </a>
+
+        <a
+          href="/admin/users"
+          class="admin-nav-link"
+        >
+          User Management
+        </a>
+
+        <a
+          href="/audit-logs"
+          class="admin-nav-link"
+        >
+          Audit Logs
+        </a>
+
+      </nav>
+
+    <% } %>
+
+
+    <!-- ========================
+         RIGHT
+    ========================= -->
+
     <div class="topbar-right">
 
       <div class="user-card">
 
         <div class="avatar">
-          <%= currentUser.username.charAt(0).toUpperCase() %>
+          <%= currentUser.username
+            .charAt(0)
+            .toUpperCase()
+          %>
         </div>
 
         <div class="user-meta">
@@ -106,13 +163,11 @@
   </header>
 
 
-
   <!-- ========================
        MAIN
   ========================= -->
 
   <main class="container">
-
 
     <!-- ========================
          EMPLOYEE LIST
@@ -140,7 +195,6 @@
         </span>
 
       </div>
-
 
 
       <!-- ========================
@@ -195,7 +249,6 @@
       </form>
 
 
-
       <!-- ========================
            TABLE
       ========================= -->
@@ -227,7 +280,6 @@
               employees.length > 0
             ) { %>
 
-
               <% employees.forEach(
                 (employee) => {
               %>
@@ -253,30 +305,23 @@
 
                   </td>
 
-
                   <td>
-
                     <strong>
                       <%= employee.firstName %>
                     </strong>
-
                   </td>
-
 
                   <td>
                     <%= employee.lastName %>
                   </td>
 
-
                   <td>
                     <%= employee.extension %>
                   </td>
 
-
                   <td class="employee-email">
                     <%= employee.email %>
                   </td>
-
 
                   <td>
 
@@ -286,11 +331,9 @@
 
                   </td>
 
-
                   <td>
                     <%= employee.reportsTo || "-" %>
                   </td>
-
 
                   <td>
                     <%= employee.jobTitle %>
@@ -298,8 +341,7 @@
 
                 </tr>
 
-              <% }) %>
-
+              <% }); %>
 
             <% } else { %>
 
@@ -339,7 +381,6 @@
       </div>
 
 
-
       <!-- ========================
            PAGINATION
       ========================= -->
@@ -368,7 +409,6 @@
       <% } %>
 
     </section>
-
 
 
     <!-- ========================
@@ -408,7 +448,6 @@
           method="POST"
           class="add-form"
         >
-
 
           <div class="form-group">
 
@@ -560,7 +599,6 @@
     <% } %>
 
 
-
     <!-- ========================
          EDIT MODAL
     ========================= -->
@@ -588,7 +626,6 @@
 
             </div>
 
-
             <button
               type="button"
               class="close-btn"
@@ -607,7 +644,6 @@
           >
 
             <div class="modal-body">
-
 
               <div class="form-group">
 
@@ -753,7 +789,6 @@
 
               <% } %>
 
-
               <button
                 type="submit"
                 class="save-button"
@@ -772,9 +807,8 @@
     <% } %>
 
 
-
     <!-- ========================
-         DELETE CONFIRM MODAL
+         DELETE CONFIRM
     ========================= -->
 
     <% if (
@@ -792,11 +826,9 @@
             !
           </div>
 
-
           <h2>
             Delete Employee?
           </h2>
-
 
           <p>
             You are about to delete
@@ -805,7 +837,6 @@
               this employee
             </strong>.
           </p>
-
 
           <span class="delete-warning-text">
             This action cannot be undone.
@@ -821,7 +852,6 @@
             >
               Cancel
             </button>
-
 
             <button
               type="button"
@@ -840,7 +870,6 @@
     <% } %>
 
   </main>
-
 
 
   <!-- ========================
